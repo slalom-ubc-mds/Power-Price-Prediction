@@ -1,0 +1,30 @@
+**AESO Data README**
+
+---
+
+## Load Data Dictionary
+
+1. The transmition planning areas could be found here: https://www.aeso.ca/assets/Uploads/PlanningRegions-Nov26-PRINT.pdf 
+2. All numbers are in MW and contain Behind the fence load. Transmission Line Losses are not included
+3. Hourly Load by Area and by Region May 2020 to Feb 2022
+    "Considerations: All values are in MW and may contain behind the fence load. Transmission line losses are not included.
+     Load values could see minor changes due to setttlement based adjustments."
+    Disclaimer: The information contained in this workbook is published for information purposes only. While the AESO strives to make the information contained in this workbook as timely and accurate as possible, the AESO makes no claims, promises, or guarantees about the accuracy, completeness or adequacy of the contents of this document, and expressly disclaims liability for errors or omissions. As such, any reliance placed on the information contained herein is done so at the reader’s own risk.\\
+
+---
+
+## P&A Table Full Data Dictionary
+
+1. https://public.tableau.com/app/profile/market.analytics/viz/AnnualStatistics_16161854228350/Introduction
+2. AIL: Alberta Internal Load
+3. Price: Data on AESO pool price
+4. Intertie: Limit and flow data for the 3 AESO interties, aggregated by tie-line and interface
+
+---
+
+## Sources
+
+1. AESO load data: https://www.aeso.ca/market/market-and-system-reporting/data-requests/
+2. Market and System Reporting including Price, Suplly & Demand info: https://www.aeso.ca/market/market-and-system-reporting/
+3. AESO Planning Area and Region Map: https://www.arcgis.com/apps/View/index.html?appid=88859e0179b44b47b3e77b0b384a18a7
+4. Background paper: https://alesevents.ualberta.ca/wp-content/uploads/sites/94/2019/08/brown-p-david-htrpaper2222018.pdf
