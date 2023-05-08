@@ -13,5 +13,4 @@ Overall, the deregulated electricity market in Alberta has made power price fore
 ## Data Science Techniques
 ## Timeline
 The project timeline is designed to ensure timely delivery. The first two weeks are allocated for proposal preparation, problem and data understanding, and initial analysis. The last two weeks are reserved for model refinement, bug fixing, presentation creation, and report finalization. The primary workload will be during the four middle weeks, where focus will be on feature engineering, model design and evaluation, data visualization, and dashboard development. Week 7 and 8 are reserved for product deployment and ensuring readiness for implementation by targeted audiences.
-
-
+![Timeline](timeline.png)
