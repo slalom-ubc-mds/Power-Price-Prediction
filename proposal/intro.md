@@ -1,4 +1,4 @@
-# Welcome to our Proposal Report for Power Price Prediction
+# Power Price Prediction Proposal Overview
 
 ```{tableofcontents}
 ```
