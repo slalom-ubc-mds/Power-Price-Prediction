@@ -2,7 +2,7 @@
 # Learn more at https://jupyterbook.org/customize/config.html
 
 title: Proposal Report for Power Price Prediction
-author: MDS, Group 13
+author: Arjun Radhakrishnan, Sneha Sunil, Gaoxiang Wang, Mehdi Naji
 logo: logo.png
 
 # Force re-execution of notebooks on each build.
