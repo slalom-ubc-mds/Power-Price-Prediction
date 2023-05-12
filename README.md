@@ -25,7 +25,7 @@ cd Power-Price-Prediction
 Install the conda environment for required dependencies:
 
 ```
-conda env create --file power_environment.yaml
+conda env create --file environment.yml
 ```
 
 Activate the conda environment:
