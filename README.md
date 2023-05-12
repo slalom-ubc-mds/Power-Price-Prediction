@@ -13,9 +13,9 @@ Clone the project repo: `git clone https://github.com/slalom-ubc-mds/Power-Price
 
 Navigate to the project repo: `cd Power-Price-Prediction`
 
-Install the conda environment for required dependencies: `conda env create --file environment.yaml`
+Install the conda environment for required dependencies: `conda env create --file power_environment.yaml`
 
-Activate the conda environment: `conda activate mds574`
+Activate the conda environment: `conda activate power_price`
 
 Render the report: `jupyter-book build notebooks/proposal_jupyter_book/`
 
