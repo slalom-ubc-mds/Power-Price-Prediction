@@ -4,6 +4,7 @@
 title: Proposal Report for Power Price Prediction
 author: Arjun Radhakrishnan, Sneha Sunil, Gaoxiang Wang, Mehdi Naji
 logo: logo.png
+copyright: "2023"
 
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
