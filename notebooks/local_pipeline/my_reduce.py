@@ -35,10 +35,12 @@ from sklearn.base import clone
 from sklearn.multioutput import MultiOutputRegressor
 
 from sktime.datatypes._utilities import get_time_index
-from sktime.forecasting.base import BaseForecaster, ForecastingHorizon
+
+# from sktime.forecasting.base import BaseForecaster, ForecastingHorizon
 from sktime.forecasting.base._base import DEFAULT_ALPHA
 from sktime.forecasting.base._fh import _index_range
-from sktime.forecasting.base._sktime import _BaseWindowForecaster
+
+# from sktime.forecasting.base._sktime import _BaseWindowForecaster
 from sktime.regression.base import BaseRegressor
 from sktime.transformations.compose import FeatureUnion
 from sktime.transformations.series.summarize import WindowSummarizer
@@ -46,6 +48,9 @@ from sktime.utils.datetime import _shift
 from sktime.utils.estimators.dispatch import construct_dispatch
 from sktime.utils.sklearn import is_sklearn_regressor
 from sktime.utils.validation import check_window_length
+
+from my_sktime import _BaseWindowForecaster
+from my_base import BaseForecaster, ForecastingHorizon
 
 
 def _concat_y_X(y, X):
@@ -511,6 +516,10 @@ class _DirectReducer(_Reducer):
 
         yt, Xt = self._transform(y, X)
 
+        estimators = []
+        if hasattr(self, "estimators_"):
+            estimators = self.estimators_
+
         # Iterate over forecasting horizon, fitting a separate estimator for each step.
         self.estimators_ = []
         for i in range(len(self.fh)):
@@ -524,7 +533,14 @@ class _DirectReducer(_Reducer):
                 estimator.fit(Xt, yt)
             else:
                 if self.windows_identical is True:
-                    estimator.fit(Xt, yt[:, i])
+                    if len(estimators) == 0:
+                        estimator.fit(Xt, yt[:, i])
+                    else:
+                        estimator.fit(
+                            Xt[-24:],
+                            yt[:, i][-24:],
+                            init_model=estimators[i],
+                        )
                 else:
                     if (fh_rel[i] - 1) == 0:
                         estimator.fit(Xt, yt[:, i])
@@ -1058,7 +1074,6 @@ class _DirRecReducer(_Reducer):
         y_pred = np.zeros(len(fh))
 
         for i in range(len(self.fh)):
-
             # Slice data using expanding window.
             X_pred = X_full[:, :, : window_length + i]
 
@@ -1928,7 +1943,6 @@ class DirectReductionForecaster(BaseForecaster, _ReducerMixin):
         self.estimators_ = []
 
         for lag in y_lags:
-
             t = Lag(lags=lag, index_out="original", keep_column_names=True)
             lagger_y_to_y[lag] = t
 
@@ -1994,7 +2008,6 @@ class DirectReductionForecaster(BaseForecaster, _ReducerMixin):
         y_pred_list = []
 
         for i, lag in enumerate(y_lags):
-
             predict_idx = y_abs[i]
 
             lag_plus = Lag(lag, index_out="extend", keep_column_names=True)
@@ -2279,7 +2292,6 @@ class RecursiveReductionForecaster(BaseForecaster, _ReducerMixin):
         y_pred_list = []
 
         for _ in y_lags_no_gaps:
-
             if hasattr(self.fh, "freq") and self.fh.freq is not None:
                 y_plus_preds = y_plus_preds.asfreq(self.fh.freq)
 
@@ -2457,7 +2469,6 @@ class YfromX(BaseForecaster, _ReducerMixin):
     }
 
     def __init__(self, estimator, pooling="local"):
-
         self.estimator = estimator
         self.pooling = pooling
         super(YfromX, self).__init__()
