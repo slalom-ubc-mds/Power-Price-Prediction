@@ -46,7 +46,7 @@ from warnings import warn
 import numpy as np
 import pandas as pd
 
-from sktime.base import BaseEstimator
+# from sktime.base import BaseEstimator
 from sktime.datatypes import (
     VectorizedDF,
     check_is_scitype,
@@ -64,6 +64,8 @@ from sktime.utils.validation._dependencies import (
 )
 from sktime.utils.validation.forecasting import check_alpha, check_cv, check_fh, check_X
 from sktime.utils.validation.series import check_equal_time_index
+
+from my_estimator_base import BaseEstimator
 
 DEFAULT_ALPHA = 0.05
 
@@ -330,8 +332,14 @@ class BaseForecaster(BaseEstimator):
         # check y is not None
         assert y is not None, "y cannot be None, but found None"
 
+        estimators = []
+        if hasattr(self, "estimators_"):
+            estimators = self.estimators_
+
         # if fit is called, estimator is reset, including fitted state
         self.reset()
+
+        self.estimators_ = estimators
 
         # check and convert X/y
         X_inner, y_inner = self._check_X_y(X=X, y=y)
@@ -1788,7 +1796,6 @@ class BaseForecaster(BaseEstimator):
         # predict-like methods: return as list, then run through reconstruct
         # to obtain a pandas based container in one of the pandas mtype formats
         elif methodname in PREDICT_METHODS:
-
             if methodname == "update_predict_single":
                 self._yvec = y
 
@@ -2065,7 +2072,6 @@ class BaseForecaster(BaseEstimator):
             )
 
         if implements_interval:
-
             pred_int = pd.DataFrame()
             for a in alpha:
                 # compute quantiles corresponding to prediction interval coverage
@@ -2101,7 +2107,6 @@ class BaseForecaster(BaseEstimator):
             pred_int.columns = int_idx
 
         elif implements_proba:
-
             # 0.19.0 - one instance of legacy_interface to remove
             pred_proba = self.predict_proba(fh=fh, X=X, legacy_interface=False)
             pred_int = pred_proba.quantile(alpha=alpha)
