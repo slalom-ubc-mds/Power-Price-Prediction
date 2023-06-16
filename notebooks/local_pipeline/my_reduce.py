@@ -533,13 +533,23 @@ class _DirectReducer(_Reducer):
                 estimator.fit(Xt, yt)
             else:
                 if self.windows_identical is True:
+                    N = len(Xt[0])
+                    last_24_indices = list(range(N - 24, N))
+
                     if len(estimators) == 0:
-                        estimator.fit(Xt, yt[:, i])
+                        estimator.fit(
+                            Xt,
+                            yt[:, i],
+                            # sample_weight=yt[:, i] / np.sum(yt[:, i]),
+                            # categorical_feature=last_24_indices,
+                        )
                     else:
                         estimator.fit(
-                            Xt[-24:],
-                            yt[:, i][-24:],
+                            Xt[-12:],
+                            yt[:, i][-12:],
                             init_model=estimators[i],
+                            # sample_weight=yt[:, i][-12:] / np.sum(yt[:, i][-12:]),
+                            # categorical_feature=last_24_indices,
                         )
                 else:
                     if (fh_rel[i] - 1) == 0:
