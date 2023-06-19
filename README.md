@@ -2,42 +2,54 @@
 
 # Power-Price-Prediction
 
-Power Price Prediction: A Short-Term Forecast​  Forecasting the price of power in Alberta using Open Source data​
+Welcome to our GitHub page!
 
-# Proposal report
+We are dedicated to providing an innovative and comprehensive business solution for power price prediction in the Alberta Energy Market. Our goal is to develop an interpretable and explainable data science product that empowers organizations to make well-informed decisions regarding their energy purchases.
 
-The proposal report can be found [here](https://slalom-ubc-mds.github.io/Power-Price-Prediction/proposal.html)
+To read more about our wonderful app, feel free to jump over to one of the sections below or continue scrolling down.
 
-To render the report locally, follow the below steps:
+- [Meet the Team](#meet-the-team)
+- [Motivation and Purpose](#motivation-and-purpose)
+- [Dashboard Description](#dashboard-description)
+- [Installation](#installation)
+- [Usage](#Usage)
 
-Clone the project repo:
 
-```
-git clone https://github.com/slalom-ubc-mds/Power-Price-Prediction.git
-```
+## Meet the Team
 
-Navigate to the project repo:
+The developers are students of the MDS program at the University of British Columbia and in partnership with [Slalom Consulting, LLC](https://www.slalom.com/).
 
-```
-cd Power-Price-Prediction
-```
+- [Sneha Sunil](https://github.com/snesunil)
+- [Gaoxiang Wang](https://github.com/louiewang820)
+- [Mehdi Naji](https://github.com/mehdi-naji)
+- [Arjun Radhakrishnan](https://github.com/rkrishnan-arjun)
 
-Install the conda environment for required dependencies:
+## Motivation and Purpose
 
-```
-conda env create --file environment.yml
-```
+Over the past few decades, the electricity markets have transformed from regulated to competitive and deregulated. Alberta’s electricity market started deregulating in 1996, resulting in highly volatile and uncertain power prices. Many organizations purchase large quantities of energy on demand and rely on energy forecasts to determine their costs in advance. Power price prediction can also be critical for many power generation companies to make effective decisions toward maximizing their profit, determining pricing strategies in the market, and scheduling technical maintenance periods. The current energy forecasts only provide a short-term coverage of 6 hours, which is volatile and lacks interpretation or model visibility. To reduce their expenses, companies could plan and potentially explore alternative energy options if they have access to accurate forecasts which covers a longer window and is also interpretable and explainable. This project aims to help businesses by providing cost analysis and forecasting hourly energy prices 12 hours in advance. Our objective is to empower companies to plan for alternative energy solutions, such as sourcing energy from elsewhere, purchasing at different times, or even developing their own energy generation systems.
 
-Activate the conda environment:
+## Dashboard Description
 
-```
-conda activate power_price_pred
-```
+Our Live Updates & Forward Predictions Dashboard delivers real-time and interpretable information, enabling users to stay informed about energy price fluctuations in the Alberta Energy Market. By leveraging the power of data science and visualization, we provide stakeholders with the tools they need to make well-informed decisions and optimize their energy purchasing strategies.
 
-Render the report:
+* Time Series Chart and Confidence Interval: 
+The top section of the dashboard showcases a 24-hour time series chart that summarizes energy prices over the last 12 hours and predicts prices for the next 12 hours. A notable feature of this chart is the inclusion of a 95% confidence interval for each hour's prediction. The green area within the chart represents this interval, offering users a clear understanding of the reliability of our forecasts.
 
-```
-jupyter-book build notebooks/proposal_jupyter_book/
-```
+* Interactive Features & Tool-Tips: 
+The dashboard is enhanced with interactive features, enabling users to explore the data further. As users move the cursor across the timeline, tool-tips appear, providing date and corresponding price information for past prices, as well as the confidence level for future predictions. This interactive element enhances the user experience and facilitates easy navigation through the dashboard.
 
-The rendered report can be found locally at `notebooks/proposal_jupyter_book/_build/html/`
+* Interactive Bar Chart & Explanatory Text: 
+The lower half of the dashboard presents an interactive bar chart that adds depth to the understanding of our model's predictions. Alongside the chart, explanatory text provides valuable insights into the top four influences on our predictions for each hour. This feature empowers users to gain a comprehensive understanding of the factors driving our forecasts and make informed decisions based on this information.
+
+* Prediction Influences & Contextual Information: 
+To provide additional context, the dashboard breaks down the influences that affect our predictions. We quantify the contribution of each feature in relation to the average power price for the previous year, which serves as the base value. Significant factors such as the gas supply mix, total reserve margin, and weekly profile are identified as key influencers. Furthermore, we have discovered four global key influencing factors strongly correlated with the price: the proportion of total energy generated by gas and wind, as well as the available reserves of each to meet surges in demand. Time series plots of these features are included in the bottom right section of the dashboard, offering users valuable insights into their impact on the predicted energy prices. Users can also choose to hide/unhide the contexutal explaintions for simplicity. 
+
+
+## Installation
+
+
+
+
+## Usage
+
+
