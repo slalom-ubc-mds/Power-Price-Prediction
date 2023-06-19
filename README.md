@@ -52,4 +52,29 @@ To provide additional context, the dashboard breaks down the influences that aff
 
 ## Usage
 
+To run prediction locally, follow the below steps:
+
+Clone the project repo:
+
+```
+git clone https://github.com/slalom-ubc-mds/Power-Price-Prediction.git
+```
+
+Navigate to the project repo:
+
+```
+cd Power-Price-Prediction
+```
+
+Install the conda environment for required dependencies:
+
+```
+conda env create --file environment.yml
+```
+
+Activate the conda environment:
+
+```
+conda activate power_price_pred
+```
 
