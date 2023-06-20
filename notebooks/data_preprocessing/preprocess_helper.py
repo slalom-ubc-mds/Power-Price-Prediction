@@ -243,7 +243,7 @@ def merge_data():
     intertie_df = intertie_df.sort_values(by='date')
 
     merged_df = pd.merge(supply_load_price, intertie_df, left_index=True, right_index=True)
-    merged_df.to_csv('../../data/processed/filtered_features.csv')
+    merged_df.to_csv('../../data/processed/preprocessed_features.csv')
 
     
     print("Completed the merging of data...")

@@ -11,7 +11,7 @@ merge_data()
 
 print("Started the feature selection...")
 
-price_old_df = pd.read_csv('../../data/processed/filtered_features.csv', parse_dates=['date'], index_col='date')
+price_old_df = pd.read_csv('../../data/processed/preprocessed_features.csv', parse_dates=['date'], index_col='date')
 price_old_df = price_old_df.asfreq('H').sort_values(by='date')
 
 price_old_df = price_old_df.rename(columns={"calgary": "calgary_load"})
@@ -155,8 +155,17 @@ sorted_useful_values.append('volume_avg')
 sorted_useful_values.append('weekly_profile')
 
 # export again
-pd.DataFrame(X[sorted_useful_values]).to_csv('../../data/processed/features.csv')
-pd.DataFrame(y).to_csv('../../data/processed/target.csv')
+
+folder_path = '../../data/processed/complete_data'
+if not os.path.exists(folder_path):
+    os.makedirs(folder_path)
+
+# Save the DataFrame to a file inside the folder
+file_path = os.path.join(folder_path, 'features.csv')
+pd.DataFrame(X[sorted_useful_values]).to_csv(file_path)
+
+file_path = os.path.join(folder_path, 'target.csv')
+pd.DataFrame(y).to_csv(file_path)
 
 # train test split
 X_train = X[sorted_useful_values].loc['2021-01-01':'2023-01-31']
@@ -165,9 +174,17 @@ X_test = X[sorted_useful_values].loc['2023-02-01':]
 y_train = y.loc['2021-01-01':'2023-01-31']
 y_test = y.loc['2023-02-01':]
 
-# export again
-pd.DataFrame(X_train).to_csv('../../data/processed/train/X_train.csv')
-pd.DataFrame(X_test).to_csv('../../data/processed/test/X_test.csv')
+train_path = '../../data/processed/train'
+if not os.path.exists(train_path):
+    os.makedirs(train_path)
+train_path = os.path.join(train_path, 'X_train.csv')
+pd.DataFrame(X_train).to_csv(train_path)
+
+test_path = '../../data/processed/test'
+if not os.path.exists(test_path):
+    os.makedirs(test_path)
+test_path = os.path.join(test_path, 'X_test.csv')
+pd.DataFrame(X_test).to_csv(test_path)
 pd.DataFrame(y_train).to_csv('../../data/processed/train/y_train.csv')
 pd.DataFrame(y_test).to_csv('../../data/processed/test/y_test.csv')
 
