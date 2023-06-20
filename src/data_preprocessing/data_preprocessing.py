@@ -1,6 +1,6 @@
 import re
 import sys
-sys.path.append("../utils/")
+sys.path.append("../../notebooks/utils")
 from preprocess_helper import *
 
 preprocess_intertie_data()
