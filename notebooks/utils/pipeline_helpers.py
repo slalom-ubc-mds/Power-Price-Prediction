@@ -2,6 +2,9 @@ from sklearn.metrics import mean_squared_error
 import pandas as pd
 import numpy as np
 import requests
+from sktime_custom_reduce import make_reduction
+from lightgbm import LGBMRegressor
+from sktime_custom_pipeline import ForecastingPipeline, TransformedTargetForecaster
 
 
 def get_fold_predictions(rolling_prediction_df, y_test_full):
@@ -23,6 +26,10 @@ def get_fold_predictions(rolling_prediction_df, y_test_full):
         fold_actuals.append(y_test_subset)
 
         fold_predictions_list.append(fold_predictions)
+
+    # Print Average, STD RMSE of all folds
+    print(f"Average RMSE for each fold: {np.mean(rmse_list)}")
+    print(f"STD RMSE for each fold: {np.std(rmse_list)}")
 
     return fold_actuals, fold_predictions_list, rmse_list
 
@@ -89,6 +96,16 @@ def get_aeso_predictions(start_date, end_date):
     df = pd.DataFrame(data)
     df["actual"] = pd.to_numeric(df["pool_price"])
     df["forecast"] = pd.to_numeric(df["forecast_pool_price"])
+
+    rmse_aeso_predictions = mean_squared_error(
+        df["actual"], df["forecast"], squared=False
+    )
+
+    print(
+        f"""One step prediction errors for AESO forecasts: {round(rmse_aeso_predictions, 2)} CAD/MWh.
+          As these are one step predictions, the error should be lesser than ours since ours is 12 step prediction errors."""
+    )
+
     return df
 
 
@@ -135,9 +152,202 @@ def generate_step_errors(
 
             rmse = mean_squared_error(actual, prediction_series, squared=False)
 
-            print(f"{step} Step RMSE for model: {rmse}")
             rmses.append(rmse)
         else:
             print(f"Error: Index mismatch for {step}-step prediction.")
 
+    for step, rmse in zip(range(1, forecast_len + 1), rmses):
+        print(f"{step} Step RMSE for model: {rmse}")
+
     return actuals, rmses
+
+
+def get_rolling_predictions(
+    pipeline, X_train, X_test, y_test_full, fh, step_length, forecast_len, verbose=True
+):
+    y_test = y_test_full[:-forecast_len]
+
+    rolling_prediction_df = pd.DataFrame(index=y_test_full.index)
+
+    y_pred = pipeline.predict(fh, X=X_train.tail(1))
+    y_pred.columns = [f"cutoff_hour_{pipeline.cutoff.hour[0]}"]
+    rolling_prediction_df = pd.concat([rolling_prediction_df, y_pred], axis=1)
+
+    # emulating the rolling prediction for the next hours
+
+    for i in range(0, len(y_test), step_length):
+        new_observation_y, new_observation_X = (
+            y_test[i : i + step_length],
+            X_test[i : i + step_length],
+        )
+
+        new_observation_y = new_observation_y.asfreq("H")
+        new_observation_X = new_observation_X.asfreq("H")
+
+        if verbose:
+            print(f"Updating with actual values at {new_observation_y.index[0]}")
+            print(f"Cut off before update: {pipeline.cutoff}")
+
+        pipeline.update(y=new_observation_y, X=new_observation_X, update_params=True)
+
+        if verbose:
+            print(f"Cut off after update: {pipeline.cutoff}")
+
+        pipeline.cutoff.freq = "H"
+
+        cutoff_time = pipeline.cutoff
+        prediction_for = cutoff_time + pd.DateOffset(hours=i)
+
+        if verbose:
+            print(f"Predicting for {prediction_for}")
+
+        y_pred = pipeline.predict(fh, X=new_observation_X)
+
+        y_pred.columns = [f"cutoff_hour_{pipeline.cutoff.hour[0]}"]
+
+        rolling_prediction_df = pd.concat([rolling_prediction_df, y_pred], axis=1)
+
+        if verbose:
+            print(f"Update and prediction done for {new_observation_y.index[0]}")
+            print(
+                "----------------------------------------------------------------------------------"
+            )
+
+    return rolling_prediction_df
+
+
+def initialize_default_lgbm_forecaster(num_threads=-1, n_estimators=1000, device="gpu"):
+    pipe = ForecastingPipeline(
+        steps=[
+            (
+                "forecaster",
+                TransformedTargetForecaster(
+                    [
+                        (
+                            "forecast",
+                            make_reduction(
+                                LGBMRegressor(
+                                    device=device,
+                                    n_jobs=num_threads,
+                                    n_estimators=n_estimators,
+                                ),
+                                window_length=24,
+                                strategy="direct",
+                            ),
+                        ),
+                    ]
+                ),
+            ),
+        ]
+    )
+
+    return pipe
+
+
+def initialize_optimized_lgbm_forecaster():
+    pipe = ForecastingPipeline(
+        steps=[
+            (
+                "forecaster",
+                TransformedTargetForecaster(
+                    [
+                        (
+                            "forecast",
+                            make_reduction(
+                                LGBMRegressor(
+                                    boosting_type="dart",
+                                    device="gpu",
+                                    learning_rate=0.01,
+                                    max_depth=15,
+                                    min_data_in_leaf=20,
+                                    n_estimators=1000,
+                                    num_leaves=70,
+                                    num_threads=12,
+                                    reg_alpha=30,
+                                    reg_lambda=20,
+                                ),
+                                window_length=24,
+                                strategy="direct",
+                            ),
+                        ),
+                    ]
+                ),
+            ),
+        ]
+    )
+
+    return pipe
+
+
+def initialize_optimized_lgbm_lower_bound():
+    pipe = ForecastingPipeline(
+        steps=[
+            (
+                "forecaster",
+                TransformedTargetForecaster(
+                    [
+                        (
+                            "forecast",
+                            make_reduction(
+                                LGBMRegressor(
+                                    boosting_type="dart",
+                                    device="gpu",
+                                    learning_rate=0.01,
+                                    max_depth=15,
+                                    min_data_in_leaf=20,
+                                    n_estimators=1000,
+                                    num_leaves=70,
+                                    num_threads=12,
+                                    reg_alpha=30,
+                                    reg_lambda=20,
+                                    objective="quantile",
+                                    alpha=0.025,
+                                ),
+                                window_length=24,
+                                strategy="direct",
+                            ),
+                        ),
+                    ]
+                ),
+            ),
+        ]
+    )
+
+    return pipe
+
+
+def initialize_optimized_lgbm_upper_bound():
+    pipe = ForecastingPipeline(
+        steps=[
+            (
+                "forecaster",
+                TransformedTargetForecaster(
+                    [
+                        (
+                            "forecast",
+                            make_reduction(
+                                LGBMRegressor(
+                                    boosting_type="dart",
+                                    device="gpu",
+                                    learning_rate=0.01,
+                                    max_depth=15,
+                                    min_data_in_leaf=20,
+                                    n_estimators=1000,
+                                    num_leaves=70,
+                                    num_threads=12,
+                                    reg_alpha=30,
+                                    reg_lambda=20,
+                                    objective="quantile",
+                                    alpha=0.975,
+                                ),
+                                window_length=24,
+                                strategy="direct",
+                            ),
+                        ),
+                    ]
+                ),
+            ),
+        ]
+    )
+
+    return pipe
