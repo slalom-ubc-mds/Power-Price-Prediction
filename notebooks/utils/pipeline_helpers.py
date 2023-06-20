@@ -102,11 +102,8 @@ def get_aeso_predictions(start_date, end_date):
     )
 
     print(
-        f"""One step prediction errors for AESO forecasts: {round(rmse_aeso_predictions, 2)} CAD/MWh.
-          As these are one step predictions, the error should be lesser than ours since ours is 12 step prediction errors."""
+        f"One step prediction errors for AESO forecasts: {round(rmse_aeso_predictions, 2)} CAD/MWh.\nAs these are one step predictions, the error should be lesser than ours since ours is 12 step prediction errors."
     )
-
-    return df
 
 
 def generate_step_predictions(rolling_prediction_df, y_test_full, num_steps):
@@ -244,7 +241,9 @@ def initialize_default_lgbm_forecaster(num_threads=-1, n_estimators=1000, device
     return pipe
 
 
-def initialize_optimized_lgbm_forecaster():
+def initialize_optimized_lgbm_forecaster(
+    num_threads=-1, n_estimators=1000, device="gpu"
+):
     pipe = ForecastingPipeline(
         steps=[
             (
@@ -256,13 +255,13 @@ def initialize_optimized_lgbm_forecaster():
                             make_reduction(
                                 LGBMRegressor(
                                     boosting_type="dart",
-                                    device="gpu",
+                                    device=device,
                                     learning_rate=0.01,
                                     max_depth=15,
                                     min_data_in_leaf=20,
-                                    n_estimators=1000,
+                                    n_estimators=n_estimators,
                                     num_leaves=70,
-                                    num_threads=12,
+                                    n_jobs=num_threads,
                                     reg_alpha=30,
                                     reg_lambda=20,
                                 ),
