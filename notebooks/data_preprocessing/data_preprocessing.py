@@ -1,5 +1,7 @@
-from preprocess_helper import *
 import re
+import sys
+sys.path.append("../utils/")
+from preprocess_helper import *
 
 preprocess_intertie_data()
 
@@ -9,7 +11,7 @@ merge_data()
 
 print("Started the feature selection...")
 
-price_old_df = pd.read_csv('../../data/processed/final_df.csv', parse_dates=['date'], index_col='date')
+price_old_df = pd.read_csv('../../data/processed/filtered_features.csv', parse_dates=['date'], index_col='date')
 price_old_df = price_old_df.asfreq('H').sort_values(by='date')
 
 price_old_df = price_old_df.rename(columns={"calgary": "calgary_load"})
