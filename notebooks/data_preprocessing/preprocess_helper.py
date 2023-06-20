@@ -51,7 +51,7 @@ def preprocess_intertie_data():
             os.makedirs(folder_path)
 
         # Save the DataFrame to a file inside the folder
-        file_path = os.path.join(folder_path, 'intertie_check.csv')
+        file_path = os.path.join(folder_path, 'intertie.csv')
         intertie_df.to_csv(file_path)
 
         print("Intertie data preprocessing completed.")
@@ -226,23 +226,23 @@ def process_supply_data():
     final_region_df = pd.merge(region_df, final_df,  left_index=True, right_index=True)
     final_region_df.index.name = 'date'
 
-    final_region_df.to_csv('../../data/processed/supply_load_price_check.csv')    
+    final_region_df.to_csv('../../data/processed/supply_load_price.csv')    
 
     print("Supply and load data preprocessing completed.")
 
 def merge_data():
     
     print("Started the merging of data...")
-    supply_load_price = pd.read_csv('../../data/processed/supply_load_price_check.csv', parse_dates=['date'], index_col='date')
+    supply_load_price = pd.read_csv('../../data/processed/supply_load_price.csv', parse_dates=['date'], index_col='date')
     supply_load_price = supply_load_price.asfreq('H')
     supply_load_price = supply_load_price.sort_values(by='date')
 
-    intertie_df = pd.read_csv('../../data/processed/intertie_check.csv', parse_dates=['date'], index_col='date')
+    intertie_df = pd.read_csv('../../data/processed/intertie.csv', parse_dates=['date'], index_col='date')
     intertie_df = intertie_df.asfreq('H')
     intertie_df = intertie_df.sort_values(by='date')
 
     merged_df = pd.merge(supply_load_price, intertie_df, left_index=True, right_index=True)
-    merged_df.to_csv('../../data/processed/final_df_check.csv')
+    merged_df.to_csv('../../data/processed/final_df.csv')
 
     
     print("Completed the merging of data...")

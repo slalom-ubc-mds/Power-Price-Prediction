@@ -9,7 +9,7 @@ merge_data()
 
 print("Started the feature selection...")
 
-price_old_df = pd.read_csv('../../data/processed/final_df_check.csv', parse_dates=['date'], index_col='date')
+price_old_df = pd.read_csv('../../data/processed/final_df.csv', parse_dates=['date'], index_col='date')
 price_old_df = price_old_df.asfreq('H').sort_values(by='date')
 
 price_old_df = price_old_df.rename(columns={"calgary": "calgary_load"})
@@ -153,8 +153,8 @@ sorted_useful_values.append('volume_avg')
 sorted_useful_values.append('weekly_profile')
 
 # export again
-pd.DataFrame(X[sorted_useful_values]).to_csv('../../data/processed/features_check.csv')
-pd.DataFrame(y).to_csv('../../data/processed/target_check.csv')
+pd.DataFrame(X[sorted_useful_values]).to_csv('../../data/processed/features.csv')
+pd.DataFrame(y).to_csv('../../data/processed/target.csv')
 
 # train test split
 X_train = X[sorted_useful_values].loc['2021-01-01':'2023-01-31']
@@ -164,11 +164,10 @@ y_train = y.loc['2021-01-01':'2023-01-31']
 y_test = y.loc['2023-02-01':]
 
 # export again
-pd.DataFrame(X_train).to_csv('../../data/processed/X_train_check.csv')
-pd.DataFrame(X_test).to_csv('../../data/processed/X_test_check.csv')
-pd.DataFrame(y_train).to_csv('../../data/processed/y_train_check.csv')
-pd.DataFrame(y_test).to_csv('../../data/processed/y_test_check.csv')
-#########
+pd.DataFrame(X_train).to_csv('../../data/processed/train/X_train.csv')
+pd.DataFrame(X_test).to_csv('../../data/processed/test/X_test.csv')
+pd.DataFrame(y_train).to_csv('../../data/processed/train/y_train.csv')
+pd.DataFrame(y_test).to_csv('../../data/processed/test/y_test.csv')
 
 print("Completed the feature selection...")
 
