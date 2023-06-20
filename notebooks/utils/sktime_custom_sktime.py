@@ -13,7 +13,7 @@ import pandas as pd
 from sktime.forecasting.model_selection import CutoffSplitter
 from sktime.utils.datetime import _shift
 
-from my_base import DEFAULT_ALPHA, BaseForecaster
+from sktime_custom_base import DEFAULT_ALPHA, BaseForecaster
 
 
 class _BaseWindowForecaster(BaseForecaster):

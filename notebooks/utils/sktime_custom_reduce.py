@@ -49,8 +49,8 @@ from sktime.utils.estimators.dispatch import construct_dispatch
 from sktime.utils.sklearn import is_sklearn_regressor
 from sktime.utils.validation import check_window_length
 
-from my_sktime import _BaseWindowForecaster
-from my_base import BaseForecaster, ForecastingHorizon
+from sktime_custom_sktime import _BaseWindowForecaster
+from sktime_custom_base import BaseForecaster, ForecastingHorizon
 
 
 def _concat_y_X(y, X):
@@ -541,7 +541,7 @@ class _DirectReducer(_Reducer):
                             Xt,
                             yt[:, i],
                             # sample_weight=yt[:, i] / np.sum(yt[:, i]),
-                            # categorical_feature=last_24_indices,
+                            categorical_feature=last_24_indices,
                         )
                     else:
                         estimator.fit(
@@ -549,7 +549,7 @@ class _DirectReducer(_Reducer):
                             yt[:, i][-12:],
                             init_model=estimators[i],
                             # sample_weight=yt[:, i][-12:] / np.sum(yt[:, i][-12:]),
-                            # categorical_feature=last_24_indices,
+                            categorical_feature=last_24_indices,
                         )
                 else:
                     if (fh_rel[i] - 1) == 0:

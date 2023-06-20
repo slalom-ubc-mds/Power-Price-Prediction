@@ -16,7 +16,7 @@ from sktime.transformations.base import BaseTransformer
 from sktime.utils.validation._dependencies import _check_soft_dependencies
 from sktime.utils.validation.series import check_series
 
-from my_base import BaseForecaster, ForecastingHorizon
+from sktime_custom_base import BaseForecaster, ForecastingHorizon
 
 
 class _Pipeline(_HeterogenousMetaEstimator, BaseForecaster):

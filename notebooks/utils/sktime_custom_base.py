@@ -65,7 +65,7 @@ from sktime.utils.validation._dependencies import (
 from sktime.utils.validation.forecasting import check_alpha, check_cv, check_fh, check_X
 from sktime.utils.validation.series import check_equal_time_index
 
-from my_estimator_base import BaseEstimator
+from sktime_custom_estimator_base import BaseEstimator
 
 DEFAULT_ALPHA = 0.05
 
