@@ -46,15 +46,17 @@ To provide additional context, the dashboard breaks down the influences that aff
 
 
 ## Installation
+Tableau: Visit the [Tableau website](https://www.tableau.com/) and download the appropriate version of Tableau for your operating system (Windows or macOS).
 
 
+Databricks Tableau driver:   Visit the [ODBC Driver website](https://www.databricks.com/spark/odbc-drivers-download?_gl=1*wbycmt*_gcl_au*MTExNDA4MjAzOC4xNjg1Mzg0MjQw&_ga=2.190062569.311368728.1687321881-777036860.1685384240) and download the appropriate version of Tableau ODBC Driver for your operating system.
 
-
+VS Code: Visit the [VS Code website](https://code.visualstudio.com/) and download the appropriate version of VS code for your operating system.
 ## Usage
 
-To run prediction locally, follow the below steps:
+* To run prediction locally, follow the below steps:
 
-Clone the project repo:
+clone the forked repo to your local machine in VS Code Command Line by running
 
 ```
 git clone https://github.com/slalom-ubc-mds/Power-Price-Prediction.git
@@ -78,3 +80,22 @@ Activate the conda environment:
 conda activate power_price_pred
 ```
 
+Get the predicted data:
+
+```
+add here
+```
+
+Connect tableau to local files
+
+* To run prediction on Databricks, follow the below steps:
+
+Log in to [Databricks](https://univbritcol-slalom-capstone23.cloud.databricks.com/login.html?o=8254429304025469)
+
+Click Workspace and navigate to `Shared/final_pipelines` folder
+
+Choose `prediction_pipeline` and click `Run all`. The initial prediction will be triggered. 
+
+Choose `update_predict_pipeline` and click `Schedule`. The prediction will be updated based on preferable refresh time (hourly).
+
+Connect tableau to Databricks
