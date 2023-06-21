@@ -1,4 +1,4 @@
-name: slalomenv
+name: power_price_pred
 channels:
   - conda-forge
   - defaults
