@@ -9,7 +9,7 @@
 * Repeated above steps for the other two data sources
 * Click Predicted Dash at the bottom
 * Click Data On the top and choose `Refresh All Extracts`. The Tableau will be up tp date.
-![](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/gw_readme_update/img/local.gif)
+![](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/img/local.gif)
 
 
 # Connect Tableau with Databricks:
@@ -28,7 +28,7 @@
 * Repeated above steps for the other two data sources
 * Click Predicted Dash at the bottom
 * Click Data On the top and choose `Refresh All Extracts`. The Tableau will be up tp date.
-![](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/gw_readme_update/img/databricks.gif)
+![](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/img/databricks.gif)
 
 
 
