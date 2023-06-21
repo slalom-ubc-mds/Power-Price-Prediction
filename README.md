@@ -54,7 +54,7 @@ Databricks Tableau driver:   Visit the [ODBC Driver website](https://www.databri
 VS Code: Visit the [VS Code website](https://code.visualstudio.com/) and download the appropriate version of VS code for your operating system.
 ## Usage
 
-* To run prediction locally, follow the below steps:
+* To run the prediction pipeline locally, follow the below steps:
 
 clone the forked repo to your local machine in VS Code Command Line by running
 
@@ -78,6 +78,12 @@ Activate the conda environment:
 
 ```
 conda activate power_price_pred
+```
+
+To generate the required X_train, y_train, X_test, y_test, first navigate to src folder and open the terminal. Then run the following command:
+
+```
+python data_preprocessing.py 
 ```
 
 Get the predicted data:
