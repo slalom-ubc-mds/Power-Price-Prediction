@@ -80,7 +80,7 @@ Activate the conda environment:
 conda activate power_price_pred
 ```
 
-To generate the required X_train, y_train, X_test, y_test, first navigate to src folder and open the terminal. Then run the following command:
+To generate the required training and testing data, first navigate to src folder and open the terminal. Then run the following command:
 
 ```
 python data_preprocessing.py 
