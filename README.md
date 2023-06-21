@@ -84,13 +84,21 @@ conda activate power_price_pred
 To generate the required training and testing data, run the following command from the root of the project directory:
 
 ```
-python src/data_preprocessing/data_preprocessing.py 
+cd src/data_preprocessing
+```
+
+```
+python data_preprocessing.py 
 ```
 
 To train the model and generate the predictions, run the following command from the root of the project directory:
 
 ```
-python src/local_testing_scripts/generate_predictions.py --model_train_start_date=2021-01-02 --predict_until=2023-02-02 --n_estimators=1000
+cd src/local_testing_scripts
+```
+
+```
+python generate_predictions.py --model_train_start_date=2021-01-02 --predict_until=2023-02-02 --n_estimators=1000
 ```
 
 The original model is trained from Jan 1st, 2021. The model can be trained from any date after Jan 1st, 2021 and before Dec 31st, 2022. The model can predict up to 4 months from the training end date. The number of estimators can be adjusted to improve the model performance or reducing the training time.
