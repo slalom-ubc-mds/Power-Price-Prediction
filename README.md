@@ -6,6 +6,8 @@ Welcome to our GitHub page!
 
 We are dedicated to providing an innovative and comprehensive business solution for power price prediction in the Alberta Energy Market. Our goal is to develop an interpretable and explainable data science product that empowers organizations to make well-informed decisions regarding their energy purchases.
 
+[Link to Sample Tableau Dashboard](https://public.tableau.com/app/profile/gaoxiang.wang8077/viz/AESOVersion6_0/PredictedDash?publish=yes)
+
 To read more about our wonderful app, feel free to jump over to one of the sections below or continue scrolling down.
 
 - [Meet the Team](#meet-the-team)
