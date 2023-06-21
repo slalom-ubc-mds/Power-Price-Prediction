@@ -184,9 +184,8 @@ def plot_daily_seasonality(df, df_column):
 
     # Create subplots with a grid layout of 2 rows and 4 columns
     fig = make_subplots(rows=4, cols=2, subplot_titles=days_of_week)
-
-
-
+    fig.update_layout(height=1200)
+  
     # Iterate over each day and add a scatter plot to the corresponding subplot
     for i, day in enumerate(days_of_week):
         subplot_row = (i % 4) + 1
