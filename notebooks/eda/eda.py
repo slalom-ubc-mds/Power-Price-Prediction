@@ -6,6 +6,7 @@ Usage:
   eda.py plot_scatter <df1> <df1_column> <df2> <df2_column>
   eda.py correlation <df> 
   eda.py plot_daily_seasonality <df> <df_column>
+  eda.py seasonal_decomposition <df> <df_column> <period>
   eda.py -h | --help
 
 Options:
@@ -20,6 +21,8 @@ from plotly.subplots import make_subplots
 import matplotlib.pyplot as plt
 warnings.filterwarnings('ignore')
 from docopt import docopt
+from statsmodels.tsa.seasonal import DecomposeResult, seasonal_decompose
+
 
 # Loading data
 def load_data(arg):
@@ -185,8 +188,6 @@ def plot_daily_seasonality(df, df_column):
     # Create subplots with a grid layout of 2 rows and 4 columns
     fig = make_subplots(rows=4, cols=2, subplot_titles=days_of_week)
 
-
-
     # Iterate over each day and add a scatter plot to the corresponding subplot
     for i, day in enumerate(days_of_week):
         subplot_row = (i % 4) + 1
@@ -207,6 +208,43 @@ def plot_daily_seasonality(df, df_column):
     fig.update_layout(title_text=f"{name}[{df_column}]'s hourly variations within each day of the week")
 
     # Show the figure
+    fig.show()
+
+def seasonal_decomposition(df, df_column, period):
+    def plot_seasonal_decompose(result:DecomposeResult, dates:pd.Series=None, title:str="Seasonal Decomposition"):
+        x_values = dates if dates is not None else np.arange(len(result.observed))
+        fig = (make_subplots(rows=4, cols=1, subplot_titles=["Observed", "Trend", "Seasonal", "Residuals"])
+            .add_trace(go.Scatter(x=x_values, y=result.observed, mode="lines", name='Observed'), row=1, col=1)
+            .add_trace(go.Scatter(x=x_values, y=result.trend, mode="lines", name='Trend'), row=2, col=1)
+            .add_trace(go.Scatter(x=x_values, y=result.seasonal, mode="lines", name='Seasonal'), row=3, col=1)
+            .add_trace(go.Scatter(x=x_values, y=result.resid, mode="lines", name='Residual'), row=4, col=1)
+            .update_layout(height=900, title=f'<b>{title}</b>', margin={'t':100}, title_x=0.5, showlegend=False)
+            .update_xaxes(range=["2023-03-01", "2023-03-31"], row=1, col=1)
+            .update_xaxes(range=["2023-03-01", "2023-03-31"], row=2, col=1)
+            .update_xaxes(range=["2023-03-01", "2023-03-31"], row=3, col=1)
+            .update_xaxes(range=["2023-03-01", "2023-03-31"], row=4, col=1)
+            )
+
+        return fig
+
+
+    name = df
+    df = pd.read_csv(f'{df}.csv', index_col=0)
+    df.index = pd.to_datetime(df.index)
+    df = pd.DataFrame(df[df_column])
+
+    df['hour'] = df.index.hour
+    df['day'] = df.index.strftime('%A')
+    df['week'] = df.index.week
+    df['month'] = df.index.strftime('%B')
+    day_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    df['day'] = pd.Categorical(df['day'], categories=day_order, ordered=True)
+
+    month_order = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    df['month'] = pd.Categorical(df['month'], categories=month_order, ordered=True)
+
+    decomposition = seasonal_decompose(df[df_column], model='additive', period=int(period))
+    fig = plot_seasonal_decompose(decomposition, dates=df.index)
     fig.show()
 
 def main():
@@ -232,7 +270,11 @@ def main():
         operation = plot_daily_seasonality
         arg1 = arguments['<df>']
         arg2 = arguments['<df_column>']
-
+    elif arguments['seasonal_decomposition']:
+        operation = seasonal_decomposition
+        arg1 = arguments['<df>']
+        arg2 = arguments['<df_column>']
+        arg3 = arguments['<period>']
 
     if operation in [load_data  , plot_df_timeseries, correlation]:
         result = operation(arg)
@@ -241,6 +283,8 @@ def main():
         result = operation(arg1, arg2, arg3, arg4)
     elif operation in [plot_daily_seasonality]:
         result = operation(arg1, arg2)
+    elif operation in [seasonal_decomposition]:
+        result = operation(arg1, arg2, arg3)
     else:
         print("Invalid operation!")
 
