@@ -174,7 +174,7 @@ def get_rolling_predictions(
 
     for i in range(0, len(y_test), step_length):
         new_observation_y, new_observation_X = (
-            y_test[i : i + step_length],
+            y_test_full[i : i + step_length],
             X_test[i : i + step_length],
         )
 
@@ -258,7 +258,6 @@ def initialize_optimized_lgbm_forecaster(
                                     device=device,
                                     learning_rate=0.01,
                                     max_depth=15,
-                                    min_data_in_leaf=20,
                                     n_estimators=n_estimators,
                                     num_leaves=70,
                                     n_jobs=num_threads,
