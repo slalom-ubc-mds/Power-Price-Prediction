@@ -163,7 +163,6 @@ notebooks/feature_selection/medium/
 notebooks/feature_selection/final_df_test.csv
 
 
-saved_models/
 notebooks/local_pipeline_runs/catboost_info/
 
 notebooks/cv_pipelines/pipeline_assets.pkl
