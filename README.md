@@ -86,7 +86,7 @@ Get the predicted data:
 add here
 ```
 
-Connect tableau to local files
+[Connect tableau to local files](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/Tableau_ReadME.md#connect-tableau-with-local-files)
 
 * To run prediction on Databricks, follow the below steps:
 
@@ -98,4 +98,4 @@ Choose `prediction_pipeline` and click `Run all`. The initial prediction will be
 
 Choose `update_predict_pipeline` and click `Schedule`. The prediction will be updated based on preferable refresh time (hourly).
 
-Connect tableau to Databricks
+[Connect tableau to Databricks](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/Tableau_ReadME.md#connect-tableau-with-databricks)
