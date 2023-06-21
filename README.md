@@ -101,7 +101,7 @@ cd src/local_testing_scripts
 python generate_predictions.py --model_train_start_date=2021-01-02 --predict_until=2023-02-02 --n_estimators=1000
 ```
 
-The original model is trained from Jan 1st, 2021 to Jan 31, 2023. Hence, `model_train_start_date` needs to be greater than January 1st, 2021, and less than December 31st, 2022. Predictions will start from Feb 1st, 2023. Hence, `predict_until` should be greater than January 31st, 2023, and less than May 30th, 2023. 
+The original model is trained from Jan 1st, 2021 to Jan 31, 2023. Hence, `model_train_start_date` needs to be greater than January 1st, 2021, and less than December 31st, 2022 to allow at least one month of training data. Predictions will start from Feb 1st, 2023. Hence, `predict_until` should be greater than January 31st, 2023, and less than May 30th, 2023. 
 The number of estimators can be adjusted to improve the model performance or reduce the training time. 
 
 [Connect tableau to local files](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/Tableau_ReadME.md#connect-tableau-with-local-files)
