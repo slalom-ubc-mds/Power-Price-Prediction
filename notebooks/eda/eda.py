@@ -8,6 +8,7 @@ Usage:
   eda.py plot_daily_seasonality <df> <df_column>
   eda.py plot_seasonality <df> <df_column> <cycle>
   eda.py seasonal_decomposition <df> <df_column> <period>
+  eda.py acf_pacf <df> <df_column> <nlags>
   eda.py -h | --help
 
 Options:
@@ -20,6 +21,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import matplotlib.pyplot as plt
+import statsmodels.api as sm
 warnings.filterwarnings('ignore')
 from docopt import docopt
 from statsmodels.tsa.seasonal import DecomposeResult, seasonal_decompose
@@ -228,37 +230,6 @@ def seasonal_decomposition(df, df_column, period):
 
         return fig
     
-
-def plot_seasonality(df, df_column, cycle):
-    name = df
-    df = pd.read_csv(f'{df}.csv', index_col=0)
-    df.index = pd.to_datetime(df.index)
-    df = pd.DataFrame(df[df_column])
-
-    
-    
-
-    if cycle == "hour":
-        df['hour'] = df.index.hour
-        hourly_average = df.groupby('hour')[df_column].mean().reset_index()
-    elif cycle == "day":
-        df['day'] = df.index.strftime('%A')
-        hourly_average = df.groupby('day')[df_column].mean().reset_index()
-        day_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-        df['day'] = pd.Categorical(df['day'], categories=day_order, ordered=True)
-    elif cycle == "week":
-        df['week'] = df.index.week
-        hourly_average = df.groupby('week')[df_column].mean().reset_index()
-    elif cycle == "month":
-        df['month'] = df.index.strftime('%B')
-        month_order = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-        df['month'] = pd.Categorical(df['month'], categories=month_order, ordered=True)
-        hourly_average = df.groupby('month')[df_column].mean().reset_index()
-    else:
-        print("Wrong cycle choice!")
-
-
-
     name = df
     df = pd.read_csv(f'{df}.csv', index_col=0)
     df.index = pd.to_datetime(df.index)
@@ -276,6 +247,89 @@ def plot_seasonality(df, df_column, cycle):
 
     decomposition = seasonal_decompose(df[df_column], model='additive', period=int(period))
     fig = plot_seasonal_decompose(decomposition, dates=df.index)
+    fig.show()
+
+
+def plot_seasonality(df, df_column, cycle):
+    name = df
+    df = pd.read_csv(f'{df}.csv', index_col=0)
+    df.index = pd.to_datetime(df.index)
+    df = pd.DataFrame(df[df_column])
+
+    if cycle == "hour":
+        df['hour'] = df.index.hour
+        average_df = df.groupby('hour')[df_column].mean().reset_index()
+    elif cycle == "day":
+        df['day'] = df.index.strftime('%A')
+        day_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+        df['day'] = pd.Categorical(df['day'], categories=day_order, ordered=True)
+        average_df = df.groupby('day')[df_column].mean().reset_index()
+    elif cycle == "week":
+        df['week'] = df.index.week
+        average_df = df.groupby('week')[df_column].mean().reset_index()
+    elif cycle == "month":
+        df['month'] = df.index.strftime('%B')
+        month_order = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+        df['month'] = pd.Categorical(df['month'], categories=month_order, ordered=True)
+        average_df = df.groupby('month')[df_column].mean().reset_index()
+    else:
+        print("Wrong cycle choice!")
+
+    fig = px.line(average_df, x=cycle, y=df_column, title=f'Average {df_column.title()} by {cycle.title()}')
+    fig.show()
+
+def acf_pacf(df, df_column, nlags):
+    name = df
+    df = pd.read_csv(f'{df}.csv', index_col=0)
+    df.index = pd.to_datetime(df.index)
+    df = pd.DataFrame(df[df_column])
+
+    acf_values, confint_acf = sm.tsa.stattools.acf(df[df_column], nlags=int(nlags), alpha=0.05)
+    pacf_values, confint_pacf = sm.tsa.stattools.pacf(df[df_column], nlags=int(nlags), alpha=0.05)
+    fig = make_subplots(rows=2, cols=1, shared_xaxes=True, vertical_spacing=0.1)
+
+    # Add first subplot
+    fig.add_trace(
+        go.Bar(
+            x=list(range(len(acf_values))),
+            y=acf_values,
+            error_y=dict(
+                type='data',
+                symmetric=False,
+                array=confint_acf[:, 1] - acf_values,
+                arrayminus=acf_values - confint_acf[:, 0]
+            ),
+            marker=dict(color='#1f77b4')
+        ),
+        row=1, col=1
+    )
+
+    # Add second subplot
+    fig.add_trace(
+        go.Bar(
+            x=list(range(len(pacf_values))),
+            y=pacf_values,
+            error_y=dict(
+                type='data',
+                symmetric=False,
+                array=confint_pacf[:, 1] - pacf_values,
+                arrayminus=pacf_values - confint_pacf[:, 0]
+            ),
+            marker=dict(color='#ff7f0e')
+        ),
+        row=2, col=1
+    )
+
+    # Update layout
+    fig.update_layout(
+        title=f'Autocorrelation and Partial Autocorrelation Functions for {df_column.title()} of {name.title()}',
+        # xaxis=dict(title='Lag'),
+        yaxis1=dict(title='ACF'),
+        yaxis2=dict(title='PACF'),
+        showlegend=False
+    )
+
+    # Show the combined plot
     fig.show()
 
 def main():
@@ -306,6 +360,16 @@ def main():
         arg1 = arguments['<df>']
         arg2 = arguments['<df_column>']
         arg3 = arguments['<period>']
+    elif arguments['plot_seasonality']:
+        operation = plot_seasonality
+        arg1 = arguments['<df>']
+        arg2 = arguments['<df_column>']
+        arg3 = arguments['<cycle>']
+    elif arguments['acf_pacf']:
+        operation = acf_pacf
+        arg1 = arguments['<df>']
+        arg2 = arguments['<df_column>']
+        arg3 = arguments['<nlags>']
 
     if operation in [load_data  , plot_df_timeseries, correlation]:
         result = operation(arg)
@@ -314,7 +378,7 @@ def main():
         result = operation(arg1, arg2, arg3, arg4)
     elif operation in [plot_daily_seasonality]:
         result = operation(arg1, arg2)
-    elif operation in [seasonal_decomposition]:
+    elif operation in [seasonal_decomposition, plot_seasonality, acf_pacf]:
         result = operation(arg1, arg2, arg3)
     else:
         print("Invalid operation!")
