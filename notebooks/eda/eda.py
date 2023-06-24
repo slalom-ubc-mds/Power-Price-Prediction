@@ -6,6 +6,7 @@ Usage:
   eda.py plot_scatter <df1> <df1_column> <df2> <df2_column>
   eda.py correlation <df> 
   eda.py plot_daily_seasonality <df> <df_column>
+  eda.py plot_seasonality <df> <df_column> <cycle>
   eda.py seasonal_decomposition <df> <df_column> <period>
   eda.py -h | --help
 
@@ -226,6 +227,36 @@ def seasonal_decomposition(df, df_column, period):
             )
 
         return fig
+    
+
+def plot_seasonality(df, df_column, cycle):
+    name = df
+    df = pd.read_csv(f'{df}.csv', index_col=0)
+    df.index = pd.to_datetime(df.index)
+    df = pd.DataFrame(df[df_column])
+
+    
+    
+
+    if cycle == "hour":
+        df['hour'] = df.index.hour
+        hourly_average = df.groupby('hour')[df_column].mean().reset_index()
+    elif cycle == "day":
+        df['day'] = df.index.strftime('%A')
+        hourly_average = df.groupby('day')[df_column].mean().reset_index()
+        day_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+        df['day'] = pd.Categorical(df['day'], categories=day_order, ordered=True)
+    elif cycle == "week":
+        df['week'] = df.index.week
+        hourly_average = df.groupby('week')[df_column].mean().reset_index()
+    elif cycle == "month":
+        df['month'] = df.index.strftime('%B')
+        month_order = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+        df['month'] = pd.Categorical(df['month'], categories=month_order, ordered=True)
+        hourly_average = df.groupby('month')[df_column].mean().reset_index()
+    else:
+        print("Wrong cycle choice!")
+
 
 
     name = df
