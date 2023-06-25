@@ -106,6 +106,9 @@ The number of estimators can be adjusted to improve the model performance or red
 
 [Connect tableau to local files](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/Tableau_ReadME.md#connect-tableau-with-local-files)
 
+
+
+---
 - To run prediction on Databricks, follow the below steps:
 
 Log in to [Databricks](https://univbritcol-slalom-capstone23.cloud.databricks.com/login.html?o=8254429304025469)
@@ -117,3 +120,14 @@ Choose `prediction_pipeline` and click `Run all`. The initial prediction will be
 Choose `update_predict_pipeline` and click `Schedule`. The prediction will be updated based on preferable refresh time (hourly).
 
 [Connect tableau to Databricks](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/Tableau_ReadME.md#connect-tableau-with-databricks)
+
+---
+- To run unit test locally, run the following command from the root of the project directory:
+  
+```
+cd test
+```
+
+```
+pytest pipeline_helper_test.py
+```
