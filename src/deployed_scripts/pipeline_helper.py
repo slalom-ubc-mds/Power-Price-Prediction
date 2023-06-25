@@ -1,4 +1,4 @@
-from databricks.sdk.runtime import *  # this line should be commented out if running locally
+# from databricks.sdk.runtime import *  # this line should be commented out if running locally
 import pandas as pd
 import os
 import copy
