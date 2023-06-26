@@ -30,8 +30,35 @@ sys.path.append("notebooks/utils/")
 
 import pipeline_helpers as ph
 
+import os
+
 
 def create_folder(folder_path):
+    """
+    Create a folder at the specified path if it does not already exist.
+
+    Parameters
+    ----------
+    folder_path : str
+        The path of the folder to be created.
+
+    Returns
+    -------
+    None
+
+    Notes
+    -----
+    This function uses the `os.makedirs` function to create the folder. If the folder
+    already exists, a message indicating the existence of the folder is printed.
+
+    Examples
+    --------
+    >>> create_folder('path/to/folder')
+    Folder created: path/to/folder
+
+    >>> create_folder('path/to/existing_folder')
+    Folder already exists: path/to/existing_folder
+    """
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
         print(f"Folder created: {folder_path}")
@@ -40,6 +67,33 @@ def create_folder(folder_path):
 
 
 def validate_date(date_str):
+    """
+    Checks whether a string is a valid date in the format "YYYY-MM-DD".
+
+    Parameters
+    ----------
+    date_str : str
+        The string representing the date in the format "YYYY-MM-DD".
+
+    Returns
+    -------
+    datetime.datetime
+        The parsed date as a datetime object.
+
+    Raises
+    ------
+    ValueError
+        If the date_str is not in the valid format "YYYY-MM-DD".
+
+    Examples
+    --------
+    >>> validate_date("2023-06-25")
+    datetime.datetime(2023, 6, 25, 0, 0)
+
+    >>> validate_date("2023/06/25")
+    ValueError: Invalid date format. Please use YYYY-MM-DD.
+
+    """
     try:
         date = datetime.strptime(date_str, "%Y-%m-%d")
         return date
@@ -48,6 +102,29 @@ def validate_date(date_str):
 
 
 def get_train_test_split(model_train_start_date, predict_until):
+    """
+    Fetches and prepares the training and testing data for a power price prediction model.
+
+    Parameters:
+    ----------
+    model_train_start_date : str
+        The start date for the training data in the format "YYYY-MM-DD".
+    predict_until : int
+        The number of records to include in the test data.
+
+    Returns:
+    -------
+    X_train : pandas.DataFrame
+        The training input features as a pandas DataFrame.
+    y_train : pandas.DataFrame
+        The training target variable as a pandas DataFrame.
+    X_test : pandas.DataFrame
+        The testing input features as a pandas DataFrame.
+    y_test : pandas.DataFrame
+        The testing target variable as a pandas DataFrame.
+    y_hist : pandas.DataFrame
+        The historical target variable used for reference as a pandas DataFrame.
+    """
     X_train = pd.read_csv(
         "https://raw.githubusercontent.com/slalom-ubc-mds/Power-Price-Prediction/main/data/processed/train/X_train.csv",
         parse_dates=["date"],
@@ -100,6 +177,17 @@ def get_train_test_split(model_train_start_date, predict_until):
 
 
 def generate_plot(rmse_list, ddf):
+    """
+    Generate an animated plot of energy price forecast.
+
+    Parameters:
+    rmse_list (list): A list of root mean square error values.
+    ddf (pandas.DataFrame): A DataFrame containing the data for plotting.
+
+    Returns:
+    plotly.graph_objects.Figure: An animated plot of energy price forecast.
+
+    """
     ddf["date"] = ddf["index"]
 
     frames = []
@@ -180,25 +268,81 @@ def generate_plot(rmse_list, ddf):
     return fig
 
 
-if __name__ == "__main__":
-    args = docopt(__doc__)
+def check_dates(model_train_start_date, predict_until):
+    """
+    Checks whether the provided dates for model training and prediction are within the valid range.
 
+    Parameters
+    ----------
+    model_train_start_date : datetime.datetime
+        The start date for model training.
+
+    predict_until : datetime.datetime
+        The end date for prediction.
+
+    Raises
+    ------
+    ValueError
+        If `model_train_start_date` is not within the valid range or if `predict_until` is not within the valid range.
+
+    Notes
+    -----
+    The valid range for `model_train_start_date` is from January 1, 2021, to December 31, 2022 (inclusive).
+
+    The valid range for `predict_until` is from February 1, 2023, to May 29, 2023 (inclusive).
+    """
+    if model_train_start_date < datetime(
+        2021, 1, 1
+    ) or model_train_start_date > datetime(2022, 12, 31):
+        raise ValueError(
+            "model_train_start_date should be greater than January 1, 2021, and less than December 31, 2022."
+        )
+
+    if predict_until <= datetime(2023, 1, 31) or predict_until >= datetime(2023, 5, 30):
+        raise ValueError(
+            "predict_until should be greater than January 31, 2023, and less than May 30, 2023."
+        )
+
+
+def save_results(fig, rolling_prediction_df, error_df, results_path="results/"):
+    """
+    Saves prediction results and error data to files.
+
+    Parameters:
+        fig (plotly.graph_objs._figure.Figure): The plotly figure object containing the predictions plot.
+        rolling_prediction_df (pandas.DataFrame): The DataFrame containing rolling predictions.
+        error_df (pandas.DataFrame): The DataFrame containing error data.
+        results_path (str, optional): The path to the results directory. Defaults to "results/".
+
+    Returns:
+        None
+
+    """
+    create_folder(results_path)
+
+    fig.write_html(
+        results_path + "predictions_plot.html", auto_play=False, include_plotlyjs=True
+    )
+
+    print("Plotting complete...")
+
+    rolling_prediction_df.index.name = "date"
+
+    rolling_prediction_df.to_csv(results_path + "rolling_predictions.csv")
+
+    print("Saving rolling predictions complete...")
+
+    error_df.to_csv(results_path + "rolling_predictions_rmse.csv", index=False)
+
+
+def main(args):
+    """Main function to run the script."""
     model_train_start_date = validate_date(args["--model_train_start_date"])
     predict_until = validate_date(args["--predict_until"])
     n_estimators = int(args["--n_estimators"])
     device = args["--device"]
 
-    if model_train_start_date < datetime(
-        2021, 1, 1
-    ) or model_train_start_date > datetime(2022, 12, 31):
-        raise ValueError(
-            "model_train_start_date should be greater than 1st Jan 2021 and less than Dec 31st 2022."
-        )
-
-    if predict_until <= datetime(2023, 1, 31) or predict_until >= datetime(2023, 5, 30):
-        raise ValueError(
-            "predict_until should be greater than Jan 31st 2023 and less than May 30th 2023."
-        )
+    check_dates(model_train_start_date, predict_until)
 
     X_train, y_train, X_test, y_test, y_hist = get_train_test_split(
         model_train_start_date, predict_until
@@ -245,7 +389,7 @@ if __name__ == "__main__":
         X_test,
         y_test,
         fh,
-        1,
+        step_length,
         forecast_len,
         verbose=False,
     )
@@ -280,21 +424,9 @@ if __name__ == "__main__":
 
     fig = generate_plot(rmse_list, ddf)
 
-    results_path = "results/"
-
-    create_folder(results_path)
-
-    fig.write_html(
-        results_path + "predictions_plot.html", auto_play=False, include_plotlyjs=True
-    )
-
     print("Plotting complete...")
 
     rolling_prediction_df.index.name = "date"
-
-    rolling_prediction_df.to_csv(results_path + "rolling_predictions.csv")
-
-    print("Saving rolling predictions complete...")
 
     data = {
         f"{step}_step_rmse": [rmse]
@@ -306,6 +438,11 @@ if __name__ == "__main__":
     error_df["prediction_end_date"] = predict_until
     error_df["avg_fold_rmse"] = round(np.mean(rmse_list), 2)
 
-    error_df.to_csv(results_path + "rolling_predictions_rmse.csv", index=False)
+    save_results(fig, rolling_prediction_df, error_df)
 
     print("Script complete...")
+
+
+if __name__ == "__main__":
+    args = docopt(__doc__)
+    main(args)
