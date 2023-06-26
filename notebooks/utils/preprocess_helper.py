@@ -80,6 +80,8 @@ def process_supply_data():
     print("Started the preprocessing of supply data...")
 
     warnings.filterwarnings("ignore")
+
+    # Get the load and price data
     ail_df = pd.read_csv(
         "data/raw/ail_price.csv", parse_dates=["Date (MST)"], index_col="Date (MST)"
     )
@@ -87,6 +89,7 @@ def process_supply_data():
     ail_df = ail_df.asfreq("H")
     ail_df = ail_df.sort_values(by="date")
 
+    # get the supply data
     supply_df = pd.read_csv(
         "data/raw/gen.csv", parse_dates=["Date (MST)"], index_col="Date (MST)"
     )
@@ -94,6 +97,7 @@ def process_supply_data():
 
     reset_df = supply_df.reset_index()
 
+    # For each factor,  transform the tables
     gen_df = reset_df[["Date (MST)", "Fuel Type", "Total Generation"]]
     wide_tng_df = gen_df.pivot(
         index="Date (MST)", columns="Fuel Type", values="Total Generation"
@@ -137,6 +141,7 @@ def process_supply_data():
     wide_tng_df = wide_tng_df.fillna(0)
     wide_sys_avail_df = wide_sys_avail_df.fillna(0)
 
+    # Change the column names
     column_mapping = {
         "Gas Fired Steam": "gas_fired_steam_tng",
         "Combined Cycle": "combined_cycle_tng",
@@ -154,6 +159,7 @@ def process_supply_data():
     # Rename the columns using the mapping
     wide_tng_df = wide_tng_df.rename(columns=column_mapping)
 
+    # Total energy generations using gas
     wide_tng_df["gas_tng"] = (
         wide_tng_df["cogeneration_tng"]
         + wide_tng_df["combined_cycle_tng"]
@@ -200,7 +206,8 @@ def process_supply_data():
     }
 
     wide_sys_avail_df = wide_sys_avail_df.rename(columns=column_mapping)
-
+    
+    # Total system available energy using gas
     wide_sys_avail_df["gas_avail"] = (
         wide_sys_avail_df["cogeneration_avail"]
         + wide_sys_avail_df["combined_cycle_avail"]
