@@ -8,7 +8,7 @@
 
 # all
 # run all of the scripts and render the final report of the project.
-all : results/predictions_plot.html
+all : notebooks\jupyter_book_reports\_build\html\index.html
 
 # To test if the pipeline is working, use the following command:
 test :
@@ -31,7 +31,8 @@ results/predictions_plot.html results/rolling_predictions.csv results/rolling_pr
 	python src/local_testing_scripts/generate_predictions.py --model_train_start_date=2022-12-01 --predict_until=2023-02-02 --n_estimators=1 --device=cpu 
 
 # render the final report
-
+notebooks\jupyter_book_reports\_build\html\index.html: results/predictions_plot.html results/rolling_predictions.csv results/rolling_predictions_rmse.csv
+	jupyter-book build notebooks/jupyter_book_reports/
 
 # clean
 # remove all generated files but preserve the directories
