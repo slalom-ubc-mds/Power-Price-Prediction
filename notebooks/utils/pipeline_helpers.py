@@ -39,7 +39,7 @@ def get_plotting_df(fold_actuals, fold_predictions_list, y_hist):
     results_df = pd.DataFrame(columns=["Date", "Data", "RMSE"])
 
     ddf = pd.DataFrame(
-        columns=["HistoricalPrice", "FuturePrice", "Predicted", "timestep"]
+        columns=["Historical Price", "Future Actual Price", "Predicted", "timestep"]
     )
 
     for i in range(len(fold_actuals)):
@@ -52,10 +52,12 @@ def get_plotting_df(fold_actuals, fold_predictions_list, y_hist):
         date_index = fold_actuals[i].index
 
         hist = pd.DataFrame(df.iloc[-12:, :]["price"]).rename(
-            columns={"price": "HistoricalPrice"}
+            columns={"price": "Historical Price"}
         )
 
-        fitu = pd.DataFrame(fold_actuals[i]).rename(columns={"price": "FuturePrice"})
+        fitu = pd.DataFrame(fold_actuals[i]).rename(
+            columns={"price": "Future Actual Price"}
+        )
 
         pred = pd.DataFrame(predictions, index=date_index).rename(
             columns={0: "Predicted"}
@@ -90,7 +92,7 @@ def get_upper_lower_plotting_df(
     results_df = pd.DataFrame(columns=["Date", "Data", "RMSE"])
 
     ddf = pd.DataFrame(
-        columns=["HistoricalPrice", "FuturePrice", "Predicted", "timestep"]
+        columns=["Historical Price", "Future Actual Price", "Predicted", "timestep"]
     )
 
     for i in range(len(fold_actuals)):
@@ -107,10 +109,12 @@ def get_upper_lower_plotting_df(
         date_index = fold_actuals[i].index
 
         hist = pd.DataFrame(df.iloc[-12:, :]["price"]).rename(
-            columns={"price": "HistoricalPrice"}
+            columns={"price": "Historical Price"}
         )
 
-        fitu = pd.DataFrame(fold_actuals[i]).rename(columns={"price": "FuturePrice"})
+        fitu = pd.DataFrame(fold_actuals[i]).rename(
+            columns={"price": "Future Actual Price"}
+        )
 
         pred = pd.DataFrame(predictions, index=date_index).rename(
             columns={0: "Predicted"}
@@ -212,8 +216,8 @@ def generate_step_errors(
 
         if filtered_test.index.equals(prediction_series.index):
             actual = y_test_full[step - 1 : step - 1 + len(prediction_series)]["price"]
+
             actuals.append(actual)
-            predictions.append(prediction_series)
 
             rmse = mean_squared_error(actual, prediction_series, squared=False)
 
