@@ -262,7 +262,7 @@ def preprocess_data():
 
     # train test split
     try:
-                # Data split
+        # Data split
         X_train = X[sorted_useful_values].loc["2021-01-01":"2023-01-31"]
         X_test = X[sorted_useful_values].loc["2023-02-01":]
         y_train = y.loc["2021-01-01":"2023-01-31"]

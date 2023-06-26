@@ -240,6 +240,8 @@ def process_supply_data():
     ail_df = ail_df.rename(columns=column_mapping)
     ail_df = ail_df[["ail", "gas_price", "price", "peak_or_not", "season"]]
     final_df = pd.merge(ail_df, merged_df, left_index=True, right_on="Date (MST)")
+    
+    ail_df.to_csv("data/processed/ail_price.csv")
 
     final_df["total_tng"] = (
         final_df["gas_tng"]
