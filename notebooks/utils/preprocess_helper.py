@@ -103,39 +103,9 @@ def process_supply_data():
         index="Date (MST)", columns="Fuel Type", values="Total Generation"
     )
 
-    sys_df = reset_df[["Date (MST)", "Fuel Type", "System Generation"]]
-    wide_sys_df = sys_df.pivot(
-        index="Date (MST)", columns="Fuel Type", values="System Generation"
-    )
-
-    sys_cap_df = reset_df[["Date (MST)", "Fuel Type", "System Capacity"]]
-    wide_sys_cap_df = sys_cap_df.pivot(
-        index="Date (MST)", columns="Fuel Type", values="System Capacity"
-    )
-
     sys_avail_df = reset_df[["Date (MST)", "Fuel Type", "System Available"]]
     wide_sys_avail_df = sys_avail_df.pivot(
         index="Date (MST)", columns="Fuel Type", values="System Available"
-    )
-
-    max_cap_df = reset_df[["Date (MST)", "Fuel Type", "Maximum Capacity"]]
-    wide_max_cap_df = max_cap_df.pivot(
-        index="Date (MST)", columns="Fuel Type", values="Maximum Capacity"
-    )
-
-    cap_fac_df = reset_df[["Date (MST)", "Fuel Type", "Capacity Factor"]]
-    wide_cap_fac_df = cap_fac_df.pivot(
-        index="Date (MST)", columns="Fuel Type", values="Capacity Factor"
-    )
-
-    avail_util = reset_df[["Date (MST)", "Fuel Type", "Availability Utilization"]]
-    wide_avail_util = avail_util.pivot(
-        index="Date (MST)", columns="Fuel Type", values="Availability Utilization"
-    )
-
-    avail_fact = reset_df[["Date (MST)", "Fuel Type", "Availability Factor"]]
-    wide_avail_fact = avail_fact.pivot(
-        index="Date (MST)", columns="Fuel Type", values="Availability Factor"
     )
 
     wide_tng_df = wide_tng_df.fillna(0)
@@ -167,29 +137,19 @@ def process_supply_data():
         + wide_tng_df["simple_cycle_tng"]
     )
 
-    tng_df = wide_tng_df[
-        [
-            "gas_tng",
-            "dual_fuel_tng",
-            "coal_tng",
-            "wind_tng",
-            "solar_tng",
-            "hydro_tng",
-            "storage_tng",
-            "other_tng",
-        ]
+    columns = [
+    "gas_tng",
+    "dual_fuel_tng",
+    "coal_tng",
+    "wind_tng",
+    "solar_tng",
+    "hydro_tng",
+    "storage_tng",
+    "other_tng",
     ]
 
-    tng_df.columns = [
-        "gas_tng",
-        "dual_fuel_tng",
-        "coal_tng",
-        "wind_tng",
-        "solar_tng",
-        "hydro_tng",
-        "storage_tng",
-        "other_tng",
-    ]
+    tng_df = wide_tng_df[columns].copy()
+    tng_df.columns = columns
 
     column_mapping = {
         "Gas Fired Steam": "gas_fired_steam_avail",
@@ -215,29 +175,19 @@ def process_supply_data():
         + wide_sys_avail_df["simple_cycle_avail"]
     )
 
-    avail_df = wide_sys_avail_df[
-        [
-            "gas_avail",
-            "dual_fuel_avail",
-            "coal_avail",
-            "wind_avail",
-            "solar_avail",
-            "hydro_avail",
-            "storage_avail",
-            "other_avail",
-        ]
+    columns = [
+    "gas_avail",
+    "dual_fuel_avail",
+    "coal_avail",
+    "wind_avail",
+    "solar_avail",
+    "hydro_avail",
+    "storage_avail",
+    "other_avail",
     ]
 
-    avail_df.columns = [
-        "gas_avail",
-        "dual_fuel_avail",
-        "coal_avail",
-        "wind_avail",
-        "solar_avail",
-        "hydro_avail",
-        "storage_avail",
-        "other_avail",
-    ]
+    avail_df = wide_sys_avail_df[columns].copy()
+    avail_df.columns = columns
 
     merged_df = pd.concat([tng_df, avail_df], axis=1)
 
@@ -349,6 +299,9 @@ def process_supply_data():
     ) / 100
     final_df = final_df.sort_index()
     final_df = final_df.asfreq("H")
+
+
+    # Read the region wise loads data 
 
     region_df = pd.read_csv(
         "data/raw/region_load.csv", parse_dates=["Date (MST)"], index_col="Date (MST)"
