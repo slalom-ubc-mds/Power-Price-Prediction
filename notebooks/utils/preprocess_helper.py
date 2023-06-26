@@ -8,6 +8,22 @@ import os
 
 
 def preprocess_intertie_data():
+
+    """
+    Preprocesses the intertie data by performing the following steps:
+    1. Reads data from the CSV file located at "data/raw/intertie.csv".
+    2. Calculates the "imported" and "exported" values based on the "BC", "MT", and "SK" columns.
+    3. Computes the "total_flow" as the sum of "WECC" and "SK" columns.
+    4. Renames columns using the provided column mapping.
+    5. Creates a folder path "data/processed" if it doesn't exist.
+    6. Saves the preprocessed DataFrame to a CSV file at "data/processed/intertie.csv".
+
+    Raises:
+    - FileNotFoundError: If the input file "data/raw/intertie.csv" is not found.
+    - pd.errors.EmptyDataError: If the input file "data/raw/intertie.csv" is empty.
+    - Exception: If any other error occurs during the preprocessing.
+    """
+
     warnings.filterwarnings("ignore")
     plt.style.use("ggplot")
     plt.rcParams.update(
@@ -77,6 +93,16 @@ def preprocess_intertie_data():
 
 
 def process_supply_data():
+
+    """
+    Preprocesses the supply data by performing the following steps:
+    1. Reads the load and price data from CSV files.
+    2. Sorts and modifies the supply data.
+    3. Transforms tables and fills missing values.
+    4. Calculates reserve margin and ratios.
+    5. Saves the processed data to a CSV file.
+    """
+
     print("Started the preprocessing of supply data...")
 
     warnings.filterwarnings("ignore")
@@ -323,6 +349,16 @@ def process_supply_data():
 
 
 def merge_data():
+
+    """
+    Merges the supply load price data with the intertie data by performing the following steps:
+    1. Reads the supply load price data and intertie data from CSV files.
+    2. Modifies the frequency and sorts the data.
+    3. Merges the two datasets based on the date index.
+    4. Saves the merged data to a CSV file.
+
+    """
+
     print("Started the merging of data...")
     supply_load_price = pd.read_csv(
         "data/processed/supply_load_price.csv", parse_dates=["date"], index_col="date"
@@ -345,6 +381,17 @@ def merge_data():
 
 
 def get_data(start_date, end_date):
+    """
+    Retrieves the data for system marginal price from the AESO API for the specified date range.
+
+    Args:
+        start_date (str): The start date in YYYY-MM-DD format.
+        end_date (str): The end date in YYYY-MM-DD format.
+
+    Returns:
+        pd.DataFrame: A DataFrame containing the system marginal price data.
+    """
+
     url = "https://api.aeso.ca/report/v1.1/price/systemMarginalPrice"
     params = {"startDate": start_date, "endDate": end_date}
     headers = {
@@ -375,6 +422,18 @@ def get_data(start_date, end_date):
 
 
 def create_lagged_columns(X, lag_range=24):
+
+    """
+    Creates lagged columns for the input DataFrame X.
+
+    Args:
+        X (pd.DataFrame): The input DataFrame.
+        lag_range (int, optional): The range of lagged values to create. Defaults to 24.
+
+    Returns:
+        list: A list of lagged column names.
+    """
+    
     lagged_names = []
     for col in X:
         for lag in range(lag_range, 0, -1):
