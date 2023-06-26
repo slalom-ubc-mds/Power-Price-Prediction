@@ -7,6 +7,33 @@ sys.path.append("notebooks/utils")
 
 from preprocess_helper import *
 
+def compute_weekly_profile(row):
+    day_of_week = row.name.dayofweek
+    peak_or_not = row["peak_or_not"]
+
+    if day_of_week in [1, 2] and peak_or_not == 1:
+        return 6
+    elif day_of_week in [0, 3] and peak_or_not == 1:
+        return 5
+    elif day_of_week in [4, 5, 6] and peak_or_not == 1:
+        return 4
+    elif day_of_week in [1, 2] and peak_or_not == 0:
+        return 3
+    elif day_of_week in [0, 3] and peak_or_not == 0:
+        return 2
+    elif day_of_week in [4, 5, 6] and peak_or_not == 0:
+        return 1
+    else:
+        return 0
+
+def save_df_to_csv(df, dir_path, file_name):
+    # Ensure the directories exist
+    os.makedirs(dir_path, exist_ok=True)
+    
+    # Save dataframe to csv
+    file_path = os.path.join(dir_path, file_name)
+    df.to_csv(file_path)
+
 # Preprocess intertie data
 def preprocess_data():
     try:
@@ -42,7 +69,6 @@ def preprocess_data():
     # Resample the dataframe by hour and sort it by date
     price_old_df = price_old_df.asfreq("H").sort_values(by="date")
 
-
     # Rename the columns for clarity
     price_old_df = price_old_df.rename(columns={
         "calgary": "calgary_load",
@@ -54,14 +80,16 @@ def preprocess_data():
     })
 
     # Multiply the specified columns by 100 to make it percentages
-    for column in price_old_df.columns:
-        if column.endswith(("_reserve_margin", "_supply_mix", "_ratio")):
-            price_old_df[column] = price_old_df[column] * 100
+    selected_columns = [col for col in price_old_df.columns if col.endswith(("_reserve_margin", "_supply_mix", "_ratio"))]
 
+    # Add other columns
+    selected_columns.extend(["relative_gas_reserve", "load_on_gas_reserve"])
 
-    price_old_df["relative_gas_reserve"] = price_old_df["relative_gas_reserve"] * 100
-    price_old_df["load_on_gas_reserve"] = price_old_df["load_on_gas_reserve"] * 100
-    price_old_df["gas_cost"] = price_old_df["gas_cost"] / 100
+    # Apply the operation on the selected columns
+    price_old_df.loc[:, selected_columns] *= 100
+
+    # Apply the operation for the 'gas_cost' column
+    price_old_df["gas_cost"] /= 100
 
     # Create X and y
     y = price_old_df[["price"]]
@@ -70,14 +98,16 @@ def preprocess_data():
     X = price_old_df.drop(columns=["price"])
     X = X.asfreq("H")
 
+    # Calculate statistics as features
     window = 24
     rolling_y = y.rolling(window)
-    X["rolling_mean"] = rolling_y.mean()
-    X["rolling_std"] = rolling_y.std()
-    X["rolling_min"] = rolling_y.min()
-    X["rolling_max"] = rolling_y.max()
-    X["rolling_median"] = rolling_y.median()
-    X["exp_moving_avg"] = y.ewm(span=24).mean()
+
+    # Calculate rolling statistics
+    X[["rolling_mean", "rolling_std", "rolling_min", "rolling_max", "rolling_median"]] = rolling_y.agg(["mean", "std", "min", "max", "median"])
+
+    # Calculate exponential moving average
+    X["exp_moving_avg"] = y.ewm(span=window).mean()
+
 
     X.dropna(inplace=True)
     y = y.loc[X.index]
@@ -86,33 +116,7 @@ def preprocess_data():
     X["season"] = X["season"].replace({"WINTER": 1, "SUMMER": 0})
     X["peak_or_not"] = X["peak_or_not"].replace({"ON PEAK": 1, "OFF PEAK": 0})
 
-    X["weekly_profile"] = 0
-    X.loc[
-        ((X.index.dayofweek == 1) | (X.index.dayofweek == 2)) & (X["peak_or_not"] == 1),
-        "weekly_profile",
-    ] = 6
-    X.loc[
-        ((X.index.dayofweek == 0) | (X.index.dayofweek == 3)) & (X["peak_or_not"] == 1),
-        "weekly_profile",
-    ] = 5
-    X.loc[
-        ((X.index.dayofweek == 4) | (X.index.dayofweek == 5) | (X.index.dayofweek == 6))
-        & (X["peak_or_not"] == 1),
-        "weekly_profile",
-    ] = 4
-    X.loc[
-        ((X.index.dayofweek == 1) | (X.index.dayofweek == 2)) & (X["peak_or_not"] == 0),
-        "weekly_profile",
-    ] = 3
-    X.loc[
-        ((X.index.dayofweek == 0) | (X.index.dayofweek == 3)) & (X["peak_or_not"] == 0),
-        "weekly_profile",
-    ] = 2
-    X.loc[
-        ((X.index.dayofweek == 4) | (X.index.dayofweek == 5) | (X.index.dayofweek == 6))
-        & (X["peak_or_not"] == 0),
-        "weekly_profile",
-    ] = 1
+    X["weekly_profile"] = X.apply(compute_weekly_profile, axis=1)
 
     # Specify your date ranges
     dates = [
@@ -164,7 +168,6 @@ def preprocess_data():
 
     # sorting the features based on useful features, this was selected based on the EDA and coefficients from Random forest regressor model and Elastic Net CV model
     sorted_useful_values = [
-        "renewable_energy_penetration",
         "fossil_fuel_ratio",
         "renewable_energy_ratio",
         "gas_supply_mix",
@@ -183,18 +186,20 @@ def preprocess_data():
         "exp_moving_avg",
         "rolling_mean",
         "gas_tng",
-        "gas_tng_ratio",
         "relative_gas_reserve",
         "hydro_tng",
-        "wind_tng",
         "load_on_gas_reserve",
         "northwest_load",
         "calgary_load",
+        "system_load",
+        "demand_supply_ratio",
+        "total_reserve_margin",
+        "volume_sum",
+        "volume_avg",
+        "weekly_profile"
     ]
 
-    sorted_useful_values.remove("gas_tng_ratio")
-    sorted_useful_values.remove("wind_tng")
-    sorted_useful_values.remove("renewable_energy_penetration")
+    #Replace prices less than zero as 5 to avoid problems with log
     y[y < 5] = 5
 
     X.index.name = "date"
@@ -202,16 +207,7 @@ def preprocess_data():
     X = X.asfreq("H")
     y = y.asfreq("H")
 
-    # Add demand_supply_ratio, weekly_profile, system_load total_reserve_margin volum_sum volumn_avg to useful_values
-    sorted_useful_values.append("system_load")
-    sorted_useful_values.append("demand_supply_ratio")
-    sorted_useful_values.append("total_reserve_margin")
-    sorted_useful_values.append("volume_sum")
-    sorted_useful_values.append("volume_avg")
-    sorted_useful_values.append("weekly_profile")
-
     # export again
-
     try:
         folder_path = "data/processed/complete_data"
         if not os.path.exists(folder_path):
@@ -229,30 +225,22 @@ def preprocess_data():
 
     # train test split
     try:
+                # Data split
         X_train = X[sorted_useful_values].loc["2021-01-01":"2023-01-31"]
         X_test = X[sorted_useful_values].loc["2023-02-01":]
-
         y_train = y.loc["2021-01-01":"2023-01-31"]
         y_test = y.loc["2023-02-01":]
 
-        train_path = "data/processed/train"
-        if not os.path.exists(train_path):
-            os.makedirs(train_path)
-        train_path = os.path.join(train_path, "X_train.csv")
-        pd.DataFrame(X_train).to_csv(train_path)
-
-        test_path = "data/processed/test"
-        if not os.path.exists(test_path):
-            os.makedirs(test_path)
-        test_path = os.path.join(test_path, "X_test.csv")
-        pd.DataFrame(X_test).to_csv(test_path)
-
-        pd.DataFrame(y_train).to_csv("data/processed/train/y_train.csv")
-        pd.DataFrame(y_test).to_csv("data/processed/test/y_test.csv")
+        # Save to csv
+        save_df_to_csv(X_train, "data/processed/train", "X_train.csv")
+        save_df_to_csv(X_test, "data/processed/test", "X_test.csv")
+        save_df_to_csv(y_train, "data/processed/train", "y_train.csv")
+        save_df_to_csv(y_test, "data/processed/test", "y_test.csv")
     except Exception as e:
         print(f"Error while doing train-test split and saving: {str(e)}")
         sys.exit(1)
 
     print("Completed the feature selection...")
 
-preprocess_data()
+if __name__ == "__main__":
+    preprocess_data()
