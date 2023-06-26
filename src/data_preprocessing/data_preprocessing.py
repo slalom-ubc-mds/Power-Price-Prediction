@@ -8,6 +8,16 @@ sys.path.append("notebooks/utils")
 from preprocess_helper import *
 
 def compute_weekly_profile(row):
+    """
+    Computes the weekly profile value based on the day of the week and the peak status.
+
+    Args:
+        row (pd.Series): A row of the DataFrame.
+
+    Returns:
+        int: The computed weekly profile value.
+    """
+
     day_of_week = row.name.dayofweek
     peak_or_not = row["peak_or_not"]
 
@@ -27,6 +37,19 @@ def compute_weekly_profile(row):
         return 0
 
 def save_df_to_csv(df, dir_path, file_name):
+
+    """
+    Saves a DataFrame to a CSV file.
+
+    Args:
+        df (pd.DataFrame): The DataFrame to save.
+        dir_path (str): The directory path to save the file.
+        file_name (str): The name of the file.
+
+    Returns:
+        None
+    """
+
     # Ensure the directories exist
     os.makedirs(dir_path, exist_ok=True)
     
@@ -36,6 +59,20 @@ def save_df_to_csv(df, dir_path, file_name):
 
 # Preprocess intertie data
 def preprocess_data():
+
+     """
+    Preprocesses the data by performing the following steps:
+    1. Runs the 'preprocess_intertie_data' function.
+    2. Runs the 'process_supply_data' function.
+    3. Runs the 'merge_data' function.
+    4. Performs feature selection and preprocessing on the preprocessed features dataset.
+    5. Saves the selected features and target data to CSV files.
+    6. Performs train-test split and saves the split data to CSV files.
+
+    Returns:
+        None
+    """
+     
     try:
         preprocess_intertie_data()
     except Exception as e:
