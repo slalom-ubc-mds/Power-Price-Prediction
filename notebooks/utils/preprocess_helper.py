@@ -8,6 +8,22 @@ import os
 
 
 def preprocess_intertie_data():
+
+    """
+    Preprocesses the intertie data by performing the following steps:
+    1. Reads data from the CSV file located at "data/raw/intertie.csv".
+    2. Calculates the "imported" and "exported" values based on the "BC", "MT", and "SK" columns.
+    3. Computes the "total_flow" as the sum of "WECC" and "SK" columns.
+    4. Renames columns using the provided column mapping.
+    5. Creates a folder path "data/processed" if it doesn't exist.
+    6. Saves the preprocessed DataFrame to a CSV file at "data/processed/intertie.csv".
+
+    Raises:
+    - FileNotFoundError: If the input file "data/raw/intertie.csv" is not found.
+    - pd.errors.EmptyDataError: If the input file "data/raw/intertie.csv" is empty.
+    - Exception: If any other error occurs during the preprocessing.
+    """
+
     warnings.filterwarnings("ignore")
     plt.style.use("ggplot")
     plt.rcParams.update(
@@ -77,9 +93,21 @@ def preprocess_intertie_data():
 
 
 def process_supply_data():
+
+    """
+    Preprocesses the supply data by performing the following steps:
+    1. Reads the load and price data from CSV files.
+    2. Sorts and modifies the supply data.
+    3. Transforms tables and fills missing values.
+    4. Calculates reserve margin and ratios.
+    5. Saves the processed data to a CSV file.
+    """
+
     print("Started the preprocessing of supply data...")
 
     warnings.filterwarnings("ignore")
+
+    # Get the load and price data
     ail_df = pd.read_csv(
         "data/raw/ail_price.csv", parse_dates=["Date (MST)"], index_col="Date (MST)"
     )
@@ -87,6 +115,7 @@ def process_supply_data():
     ail_df = ail_df.asfreq("H")
     ail_df = ail_df.sort_values(by="date")
 
+    # get the supply data
     supply_df = pd.read_csv(
         "data/raw/gen.csv", parse_dates=["Date (MST)"], index_col="Date (MST)"
     )
@@ -94,19 +123,10 @@ def process_supply_data():
 
     reset_df = supply_df.reset_index()
 
+    # For each factor,  transform the tables
     gen_df = reset_df[["Date (MST)", "Fuel Type", "Total Generation"]]
     wide_tng_df = gen_df.pivot(
         index="Date (MST)", columns="Fuel Type", values="Total Generation"
-    )
-
-    sys_df = reset_df[["Date (MST)", "Fuel Type", "System Generation"]]
-    wide_sys_df = sys_df.pivot(
-        index="Date (MST)", columns="Fuel Type", values="System Generation"
-    )
-
-    sys_cap_df = reset_df[["Date (MST)", "Fuel Type", "System Capacity"]]
-    wide_sys_cap_df = sys_cap_df.pivot(
-        index="Date (MST)", columns="Fuel Type", values="System Capacity"
     )
 
     sys_avail_df = reset_df[["Date (MST)", "Fuel Type", "System Available"]]
@@ -114,29 +134,10 @@ def process_supply_data():
         index="Date (MST)", columns="Fuel Type", values="System Available"
     )
 
-    max_cap_df = reset_df[["Date (MST)", "Fuel Type", "Maximum Capacity"]]
-    wide_max_cap_df = max_cap_df.pivot(
-        index="Date (MST)", columns="Fuel Type", values="Maximum Capacity"
-    )
-
-    cap_fac_df = reset_df[["Date (MST)", "Fuel Type", "Capacity Factor"]]
-    wide_cap_fac_df = cap_fac_df.pivot(
-        index="Date (MST)", columns="Fuel Type", values="Capacity Factor"
-    )
-
-    avail_util = reset_df[["Date (MST)", "Fuel Type", "Availability Utilization"]]
-    wide_avail_util = avail_util.pivot(
-        index="Date (MST)", columns="Fuel Type", values="Availability Utilization"
-    )
-
-    avail_fact = reset_df[["Date (MST)", "Fuel Type", "Availability Factor"]]
-    wide_avail_fact = avail_fact.pivot(
-        index="Date (MST)", columns="Fuel Type", values="Availability Factor"
-    )
-
     wide_tng_df = wide_tng_df.fillna(0)
     wide_sys_avail_df = wide_sys_avail_df.fillna(0)
 
+    # Change the column names
     column_mapping = {
         "Gas Fired Steam": "gas_fired_steam_tng",
         "Combined Cycle": "combined_cycle_tng",
@@ -154,6 +155,7 @@ def process_supply_data():
     # Rename the columns using the mapping
     wide_tng_df = wide_tng_df.rename(columns=column_mapping)
 
+    # Total energy generations using gas
     wide_tng_df["gas_tng"] = (
         wide_tng_df["cogeneration_tng"]
         + wide_tng_df["combined_cycle_tng"]
@@ -161,29 +163,19 @@ def process_supply_data():
         + wide_tng_df["simple_cycle_tng"]
     )
 
-    tng_df = wide_tng_df[
-        [
-            "gas_tng",
-            "dual_fuel_tng",
-            "coal_tng",
-            "wind_tng",
-            "solar_tng",
-            "hydro_tng",
-            "storage_tng",
-            "other_tng",
-        ]
+    columns = [
+    "gas_tng",
+    "dual_fuel_tng",
+    "coal_tng",
+    "wind_tng",
+    "solar_tng",
+    "hydro_tng",
+    "storage_tng",
+    "other_tng",
     ]
 
-    tng_df.columns = [
-        "gas_tng",
-        "dual_fuel_tng",
-        "coal_tng",
-        "wind_tng",
-        "solar_tng",
-        "hydro_tng",
-        "storage_tng",
-        "other_tng",
-    ]
+    tng_df = wide_tng_df[columns].copy()
+    tng_df.columns = columns
 
     column_mapping = {
         "Gas Fired Steam": "gas_fired_steam_avail",
@@ -200,7 +192,8 @@ def process_supply_data():
     }
 
     wide_sys_avail_df = wide_sys_avail_df.rename(columns=column_mapping)
-
+    
+    # Total system available energy using gas
     wide_sys_avail_df["gas_avail"] = (
         wide_sys_avail_df["cogeneration_avail"]
         + wide_sys_avail_df["combined_cycle_avail"]
@@ -208,29 +201,19 @@ def process_supply_data():
         + wide_sys_avail_df["simple_cycle_avail"]
     )
 
-    avail_df = wide_sys_avail_df[
-        [
-            "gas_avail",
-            "dual_fuel_avail",
-            "coal_avail",
-            "wind_avail",
-            "solar_avail",
-            "hydro_avail",
-            "storage_avail",
-            "other_avail",
-        ]
+    columns = [
+    "gas_avail",
+    "dual_fuel_avail",
+    "coal_avail",
+    "wind_avail",
+    "solar_avail",
+    "hydro_avail",
+    "storage_avail",
+    "other_avail",
     ]
 
-    avail_df.columns = [
-        "gas_avail",
-        "dual_fuel_avail",
-        "coal_avail",
-        "wind_avail",
-        "solar_avail",
-        "hydro_avail",
-        "storage_avail",
-        "other_avail",
-    ]
+    avail_df = wide_sys_avail_df[columns].copy()
+    avail_df.columns = columns
 
     merged_df = pd.concat([tng_df, avail_df], axis=1)
 
@@ -343,6 +326,9 @@ def process_supply_data():
     final_df = final_df.sort_index()
     final_df = final_df.asfreq("H")
 
+
+    # Read the region wise loads data 
+
     region_df = pd.read_csv(
         "data/raw/region_load.csv", parse_dates=["Date (MST)"], index_col="Date (MST)"
     )
@@ -363,6 +349,16 @@ def process_supply_data():
 
 
 def merge_data():
+
+    """
+    Merges the supply load price data with the intertie data by performing the following steps:
+    1. Reads the supply load price data and intertie data from CSV files.
+    2. Modifies the frequency and sorts the data.
+    3. Merges the two datasets based on the date index.
+    4. Saves the merged data to a CSV file.
+
+    """
+
     print("Started the merging of data...")
     supply_load_price = pd.read_csv(
         "data/processed/supply_load_price.csv", parse_dates=["date"], index_col="date"
@@ -385,6 +381,17 @@ def merge_data():
 
 
 def get_data(start_date, end_date):
+    """
+    Retrieves the data for system marginal price from the AESO API for the specified date range.
+
+    Args:
+        start_date (str): The start date in YYYY-MM-DD format.
+        end_date (str): The end date in YYYY-MM-DD format.
+
+    Returns:
+        pd.DataFrame: A DataFrame containing the system marginal price data.
+    """
+
     url = "https://api.aeso.ca/report/v1.1/price/systemMarginalPrice"
     params = {"startDate": start_date, "endDate": end_date}
     headers = {
@@ -415,6 +422,18 @@ def get_data(start_date, end_date):
 
 
 def create_lagged_columns(X, lag_range=24):
+
+    """
+    Creates lagged columns for the input DataFrame X.
+
+    Args:
+        X (pd.DataFrame): The input DataFrame.
+        lag_range (int, optional): The range of lagged values to create. Defaults to 24.
+
+    Returns:
+        list: A list of lagged column names.
+    """
+    
     lagged_names = []
     for col in X:
         for lag in range(lag_range, 0, -1):
