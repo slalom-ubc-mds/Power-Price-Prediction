@@ -167,3 +167,7 @@ notebooks/local_pipeline_runs/catboost_info/
 
 notebooks/cv_pipelines/pipeline_assets.pkl
 notebooks/cv_style_pipelines/hyper_param_tuning/tuning_results.pkl
+src/local_testing_scripts/gp copy 2.ipynb
+src/local_testing_scripts/gp copy.ipynb
+src/local_testing_scripts/gp.ipynb
+
