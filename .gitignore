@@ -171,3 +171,6 @@ src/local_testing_scripts/gp copy 2.ipynb
 src/local_testing_scripts/gp copy.ipynb
 src/local_testing_scripts/gp.ipynb
 
+src/local_testing_scripts/v_3.py
+src/local_testing_scripts/v_2.py
+.vscode/launch.json
