@@ -60,7 +60,7 @@ def save_df_to_csv(df, dir_path, file_name):
 # Preprocess intertie data
 def preprocess_data():
 
-     """
+    """
     Preprocesses the data by performing the following steps:
     1. Runs the 'preprocess_intertie_data' function.
     2. Runs the 'process_supply_data' function.
