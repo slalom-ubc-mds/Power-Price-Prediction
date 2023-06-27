@@ -265,7 +265,7 @@ def get_rolling_predictions(
         pipeline.cutoff.freq = "H"
 
         cutoff_time = pipeline.cutoff
-        prediction_for = cutoff_time + pd.DateOffset(hours=i)
+        prediction_for = cutoff_time + pd.DateOffset(hours=step_length)
 
         if verbose:
             print(f"Predicting for {prediction_for}")
