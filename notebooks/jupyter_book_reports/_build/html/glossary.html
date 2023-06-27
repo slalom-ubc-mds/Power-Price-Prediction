@@ -155,11 +155,10 @@ const thebe_selector_output = ".output, .cell_output"
                 </a>
             </li>
         </ul>
-        <ul class="current nav bd-sidenav">
+        <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="proposal.html">Proposal Report : Power Price Prediction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="final_report.html">Final Report : Power Price Prediction</a></li>
 
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Key Engineered features</a></li>
 </ul>
 
     </div>
@@ -391,61 +390,64 @@ document.write(`
 <tr class="row-even"><td><p>wind_reserve_margin</p></td>
 <td><p>The reserve/buffer wind supply that is available to meet any unexpected demand</p></td>
 </tr>
-<tr class="row-odd"><td><p>other_reserve_margin</p></td>
-<td><p>The reserve/buffer other supply option excluding that is available to meet any unexpected demand</p></td>
-</tr>
-<tr class="row-even"><td><p>rolling_std</p></td>
-<td><p>Rolling standard deviation of the price for a window length of 24</p></td>
-</tr>
-<tr class="row-odd"><td><p>rolling_median</p></td>
-<td><p>Rolling median of the price for a window length of 24</p></td>
-</tr>
-<tr class="row-even"><td><p>rolling_min</p></td>
-<td><p>Rolling minimum of the price for a window length of 24</p></td>
-</tr>
-<tr class="row-odd"><td><p>rolling_max</p></td>
-<td><p>Rolling maximum of the price for a window length of 24</p></td>
-</tr>
-<tr class="row-even"><td><p>exp_moving_avg</p></td>
-<td><p>Exponential moving average of the values of price using the exponential smoothing function with a specified span of 24</p></td>
-</tr>
-<tr class="row-odd"><td><p>rolling_mean</p></td>
-<td><p>Rolling mean (also known as the moving average) of the price</p></td>
-</tr>
-<tr class="row-even"><td><p>gas_tng</p></td>
-<td><p>Total energy generated using gas supply</p></td>
-</tr>
-<tr class="row-odd"><td><p>relative_gas_reserve</p></td>
-<td><p>Proportion of reserve available for gas supply out of total reserve available</p></td>
-</tr>
-<tr class="row-even"><td><p>hydro_tng</p></td>
-<td><p>Total energy generated using hydro supply</p></td>
-</tr>
-<tr class="row-odd"><td><p>load_on_gas_reserve</p></td>
+<tr class="row-odd"><td><p>gas_reserve_margin</p></td>
 <td><p>The reserve/buffer gas supply that is available to meet any unexpected demand</p></td>
 </tr>
-<tr class="row-even"><td><p>northwest_load</p></td>
+<tr class="row-even"><td><p>other_reserve_margin</p></td>
+<td><p>The reserve/buffer other supply option excluding that is available to meet any unexpected demand</p></td>
+</tr>
+<tr class="row-odd"><td><p>rolling_std</p></td>
+<td><p>Rolling standard deviation of the price for a window length of 24</p></td>
+</tr>
+<tr class="row-even"><td><p>rolling_median</p></td>
+<td><p>Rolling median of the price for a window length of 24</p></td>
+</tr>
+<tr class="row-odd"><td><p>rolling_min</p></td>
+<td><p>Rolling minimum of the price for a window length of 24</p></td>
+</tr>
+<tr class="row-even"><td><p>rolling_max</p></td>
+<td><p>Rolling maximum of the price for a window length of 24</p></td>
+</tr>
+<tr class="row-odd"><td><p>exp_moving_avg</p></td>
+<td><p>Exponential moving average of the values of price using the exponential smoothing function with a specified span of 24</p></td>
+</tr>
+<tr class="row-even"><td><p>rolling_mean</p></td>
+<td><p>Rolling mean (also known as the moving average) of the price</p></td>
+</tr>
+<tr class="row-odd"><td><p>gas_tng</p></td>
+<td><p>Total energy generated using gas supply</p></td>
+</tr>
+<tr class="row-even"><td><p>relative_gas_reserve</p></td>
+<td><p>Proportion of reserve available for gas supply out of total reserve available</p></td>
+</tr>
+<tr class="row-odd"><td><p>hydro_tng</p></td>
+<td><p>Total energy generated using hydro supply</p></td>
+</tr>
+<tr class="row-even"><td><p>load_on_gas_reserve</p></td>
+<td><p>The reserve/buffer gas supply that is available to meet any unexpected demand</p></td>
+</tr>
+<tr class="row-odd"><td><p>northwest_load</p></td>
 <td><p>The internal load in northwest region of Alberta</p></td>
 </tr>
-<tr class="row-odd"><td><p>calgary_load</p></td>
+<tr class="row-even"><td><p>calgary_load</p></td>
 <td><p>The internal load in northwest region of Calgary</p></td>
 </tr>
-<tr class="row-even"><td><p>system_load</p></td>
+<tr class="row-odd"><td><p>system_load</p></td>
 <td><p>System load is the sum of the region wise energy loads and the transmission losses.</p></td>
 </tr>
-<tr class="row-odd"><td><p>demand_supply_ratio</p></td>
+<tr class="row-even"><td><p>demand_supply_ratio</p></td>
 <td><p>Ration of Demand to available supply</p></td>
 </tr>
-<tr class="row-even"><td><p>total_reserve_margin</p></td>
+<tr class="row-odd"><td><p>total_reserve_margin</p></td>
 <td><p>The total reserve/buffer supply that is available to meet any unexpected demand</p></td>
 </tr>
-<tr class="row-odd"><td><p>volume_sum</p></td>
+<tr class="row-even"><td><p>volume_sum</p></td>
 <td><p>Sum of metered volume of power for that hour</p></td>
 </tr>
-<tr class="row-even"><td><p>volume_avg</p></td>
+<tr class="row-odd"><td><p>volume_avg</p></td>
 <td><p>Average of metered volume of power for that hour</p></td>
 </tr>
-<tr class="row-odd"><td><p>weekly_profile</p></td>
+<tr class="row-even"><td><p>weekly_profile</p></td>
 <td><p>An ordinal feature that is engineered based on day of the week and peak hour</p></td>
 </tr>
 </tbody>
