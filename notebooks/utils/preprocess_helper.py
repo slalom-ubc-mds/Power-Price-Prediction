@@ -102,6 +102,10 @@ def process_supply_data():
     4. Calculates reserve margin and ratios.
     5. Saves the processed data to a CSV file.
     """
+    # Define the folder path for saving the processed data
+    folder_path = "data/processed"
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
 
     print("Started the preprocessing of supply data...")
 
@@ -240,6 +244,8 @@ def process_supply_data():
     ail_df = ail_df.rename(columns=column_mapping)
     ail_df = ail_df[["ail", "gas_price", "price", "peak_or_not", "season"]]
     final_df = pd.merge(ail_df, merged_df, left_index=True, right_on="Date (MST)")
+    
+    ail_df.to_csv("data/processed/ail_price.csv")
 
     final_df["total_tng"] = (
         final_df["gas_tng"]
@@ -358,7 +364,11 @@ def merge_data():
     4. Saves the merged data to a CSV file.
 
     """
-
+    
+    folder_path = "data/processed"
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+        
     print("Started the merging of data...")
     supply_load_price = pd.read_csv(
         "data/processed/supply_load_price.csv", parse_dates=["date"], index_col="date"

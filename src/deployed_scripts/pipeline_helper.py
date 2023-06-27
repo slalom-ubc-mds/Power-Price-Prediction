@@ -290,7 +290,7 @@ def generate_tableau_required_dataframe(y_pred):
 
     # Import the feature data from csv and join it with joined_df
     input_features = pd.read_csv(
-        "https://raw.githubusercontent.com/slalom-ubc-mds/Power-Price-Prediction/main/data/processed/filtered_features_medium.csv"
+        "https://raw.githubusercontent.com/slalom-ubc-mds/Power-Price-Prediction/main/data/processed/complete_data/features.csv"
     )
     input_features = input_features[
         [

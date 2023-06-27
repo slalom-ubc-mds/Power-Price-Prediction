@@ -51,7 +51,7 @@ def test_get_train_test_split():
 
 
 def test_generate_plot():
-    rmse_list = [2, 3, 4]
+    rmse = 2.5678
 
     data = {
         "Historical Price": [100, 105, 110, 115, 120],
@@ -67,17 +67,17 @@ def test_generate_plot():
     # Create DataFrame
     ddf = pd.DataFrame(data)
 
-    fig = generate_plot(rmse_list, ddf)
+    fig = generate_plot(rmse, ddf)
 
     assert fig.layout.title.text == "Energy Price Forecast Animation"
 
     with pytest.raises(KeyError):
         ddf = pd.DataFrame({"index": pd.date_range(start="1/1/2021", periods=5)})
-        generate_plot(rmse_list, ddf)
+        generate_plot(rmse, ddf)
 
     with pytest.raises(KeyError):
-        rmse_list = []
-        generate_plot(rmse_list, ddf)
+        rmse = []
+        generate_plot(rmse, ddf)
 
 
 def test_check_dates():
@@ -91,7 +91,7 @@ def test_check_dates():
 
 
 def test_save_results():
-    rmse_list = [2, 3, 4]
+    rmse = 2.5678
     data = {
         "Historical Price": [100, 105, 110, 115, 120],
         "Future Actual Price": [105, 108, 112, 115, 118],
@@ -106,21 +106,23 @@ def test_save_results():
     # Create DataFrame
     ddf = pd.DataFrame(data)
 
-    fig = generate_plot(rmse_list, ddf)
+    fig = generate_plot(rmse, ddf)
     rolling_prediction_df = pd.DataFrame(
         {"date": pd.date_range(start="1/1/2021", periods=5), "value": [2] * 5}
     )
     error_df = pd.DataFrame({"value": [3] * 5})
 
-    save_results(fig, rolling_prediction_df, error_df, "./temp_results/")
+    save_results(fig, rolling_prediction_df, error_df, ddf, "./temp_results/")
 
     assert os.path.exists("./temp_results/predictions_plot.html") == True
     assert os.path.exists("./temp_results/rolling_predictions.csv") == True
     assert os.path.exists("./temp_results/rolling_predictions_rmse.csv") == True
+    assert os.path.exists("./temp_results/animation_df.csv") == True
 
     os.remove("./temp_results/predictions_plot.html")
     os.remove("./temp_results/rolling_predictions.csv")
     os.remove("./temp_results/rolling_predictions_rmse.csv")
+    os.remove("./temp_results/animation_df.csv")
     os.rmdir("./temp_results")
 
 

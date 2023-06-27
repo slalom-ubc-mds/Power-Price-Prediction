@@ -262,11 +262,17 @@ def preprocess_data():
 
     # train test split
     try:
-                # Data split
+        # Data split
         X_train = X[sorted_useful_values].loc["2021-01-01":"2023-01-31"]
         X_test = X[sorted_useful_values].loc["2023-02-01":]
         y_train = y.loc["2021-01-01":"2023-01-31"]
         y_test = y.loc["2023-02-01":]
+
+        folder_paths = ["data/processed/train", "data/processed/test"]
+
+        for folder_path in folder_paths:
+            if not os.path.exists(folder_path):
+                os.makedirs(folder_path)
 
         # Save to csv
         save_df_to_csv(X_train, "data/processed/train", "X_train.csv")
