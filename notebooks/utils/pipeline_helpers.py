@@ -265,7 +265,7 @@ def get_rolling_predictions(
         pipeline.cutoff.freq = "H"
 
         cutoff_time = pipeline.cutoff
-        prediction_for = cutoff_time + pd.DateOffset(hours=i)
+        prediction_for = cutoff_time + pd.DateOffset(hours=step_length)
 
         if verbose:
             print(f"Predicting for {prediction_for}")
@@ -419,6 +419,7 @@ def initialize_optimized_lgbm_forecaster(
                             "forecast",
                             make_reduction(
                                 LGBMRegressor(
+                                    boosting_type="dart",
                                     device=device,
                                     n_jobs=num_threads,
                                     n_estimators=n_estimators,
