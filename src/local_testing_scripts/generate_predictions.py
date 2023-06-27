@@ -166,7 +166,7 @@ def get_train_test_split(model_train_start_date, predict_until):
     y_test = y_test[:predict_until]
 
     y_hist = pd.read_csv(
-        "https://raw.githubusercontent.com/slalom-ubc-mds/Power-Price-Prediction/main/data/processed/filtered_target_medium.csv",
+        "https://raw.githubusercontent.com/slalom-ubc-mds/Power-Price-Prediction/main/data/processed/complete_data/target.csv",
         parse_dates=["date"],
         index_col="date",
     )
