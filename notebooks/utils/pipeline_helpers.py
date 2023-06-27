@@ -419,13 +419,12 @@ def initialize_optimized_lgbm_forecaster(
                             "forecast",
                             make_reduction(
                                 LGBMRegressor(
-                                    boosting_type="dart",
                                     device=device,
+                                    n_jobs=num_threads,
+                                    n_estimators=n_estimators,
                                     learning_rate=0.01,
                                     max_depth=15,
-                                    n_estimators=n_estimators,
                                     num_leaves=70,
-                                    n_jobs=num_threads,
                                     reg_alpha=30,
                                     reg_lambda=20,
                                 ),

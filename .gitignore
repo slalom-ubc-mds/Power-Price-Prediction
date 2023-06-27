@@ -167,10 +167,10 @@ notebooks/local_pipeline_runs/catboost_info/
 
 notebooks/cv_pipelines/pipeline_assets.pkl
 notebooks/cv_style_pipelines/hyper_param_tuning/tuning_results.pkl
-src/local_testing_scripts/gp copy 2.ipynb
-src/local_testing_scripts/gp copy.ipynb
-src/local_testing_scripts/gp.ipynb
+src/local_prediction_pipeline/gp copy 2.ipynb
+src/local_prediction_pipeline/gp copy.ipynb
+src/local_prediction_pipeline/gp.ipynb
 
-src/local_testing_scripts/v_3.py
-src/local_testing_scripts/v_2.py
+src/local_prediction_pipeline/v_3.py
+src/local_prediction_pipeline/v_2.py
 .vscode/launch.json
