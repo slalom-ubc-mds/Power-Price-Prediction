@@ -94,21 +94,20 @@ python data_preprocessing.py
 To train the model and generate the predictions, run the following command from the root of the project directory:
 
 ```
-cd src/local_testing_scripts
+cd src/local_prediction_pipeline
 ```
 
 ```
 python generate_predictions.py --model_train_start_date=2021-01-02 --predict_until=2023-02-02 --n_estimators=1000
 ```
 
-The original model is trained from Jan 1st, 2021 to Jan 31, 2023. Hence, `model_train_start_date` needs to be greater than January 1st, 2021, and less than December 31st, 2022 to allow at least one month of training data. Predictions will start from Feb 1st, 2023. Hence, `predict_until` should be greater than January 31st, 2023, and less than May 30th, 2023. 
-The number of estimators can be adjusted to improve the model performance or reduce the training time. 
+The original model is trained from Jan 1st, 2021 to Jan 31, 2023. Hence, `model_train_start_date` needs to be greater than January 1st, 2021, and less than December 31st, 2022 to allow at least one month of training data. Predictions will start from Feb 1st, 2023. Hence, `predict_until` should be greater than January 31st, 2023, and less than May 30th, 2023.
+The number of estimators can be adjusted to improve the model performance or reduce the training time.
 
 [Connect tableau to local files](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/Tableau_ReadME.md#connect-tableau-with-local-files)
 
-
-
 ---
+
 - To run prediction on Databricks, follow the below steps:
 
 Log in to [Databricks](https://univbritcol-slalom-capstone23.cloud.databricks.com/login.html?o=8254429304025469)
@@ -122,6 +121,7 @@ Choose `update_predict_pipeline` and click `Schedule`. The prediction will be up
 [Connect tableau to Databricks](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/Tableau_ReadME.md#connect-tableau-with-databricks)
 
 ---
+
 - To run unit test locally, run the following command from the root of the project directory:
   
 ```
