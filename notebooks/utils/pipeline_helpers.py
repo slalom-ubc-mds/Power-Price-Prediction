@@ -419,6 +419,7 @@ def initialize_optimized_lgbm_forecaster(
                             "forecast",
                             make_reduction(
                                 LGBMRegressor(
+                                    boosting_type="dart",
                                     device=device,
                                     n_jobs=num_threads,
                                     n_estimators=n_estimators,
