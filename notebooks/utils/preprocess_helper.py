@@ -7,21 +7,24 @@ import warnings
 import os
 
 
-def preprocess_intertie_data():
+def preprocess_intertie_data(save_folder_path = 'data/processed/'):
 
     """
-    Preprocesses the intertie data by performing the following steps:
-    1. Reads data from the CSV file located at "data/raw/intertie.csv".
-    2. Calculates the "imported" and "exported" values based on the "BC", "MT", and "SK" columns.
-    3. Computes the "total_flow" as the sum of "WECC" and "SK" columns.
-    4. Renames columns using the provided column mapping.
-    5. Creates a folder path "data/processed" if it doesn't exist.
-    6. Saves the preprocessed DataFrame to a CSV file at "data/processed/intertie.csv".
+    Preprocesses the intertie data.
 
-    Raises:
-    - FileNotFoundError: If the input file "data/raw/intertie.csv" is not found.
-    - pd.errors.EmptyDataError: If the input file "data/raw/intertie.csv" is empty.
-    - Exception: If any other error occurs during the preprocessing.
+    Parameters
+    ----------
+    save_folder_path : str, optional
+        The folder path where the preprocessed data will be saved. Default is 'data/processed/'.
+
+    Raises
+    ------
+    FileNotFoundError
+        If the input file 'data/raw/intertie.csv' is not found.
+    pd.errors.EmptyDataError
+        If the input file 'data/raw/intertie.csv' is empty.
+    Exception
+        If any other error occurs during the preprocessing.
     """
 
     warnings.filterwarnings("ignore")
@@ -75,7 +78,7 @@ def preprocess_intertie_data():
         intertie_df = intertie_df.rename(columns=column_mapping)
 
         # Define the folder path for saving the processed data
-        folder_path = "data/processed"
+        folder_path = save_folder_path
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
 
@@ -92,18 +95,27 @@ def preprocess_intertie_data():
         print(f"An error occurred: {e}")
 
 
-def process_supply_data():
+def process_supply_data(save_folder_path = 'data/processed/'):
 
     """
-    Preprocesses the supply data by performing the following steps:
-    1. Reads the load and price data from CSV files.
-    2. Sorts and modifies the supply data.
-    3. Transforms tables and fills missing values.
-    4. Calculates reserve margin and ratios.
-    5. Saves the processed data to a CSV file.
+    Processes supply data, performing transformations, calculations, and saves the result to CSV.
+
+    This function reads the load and price data from CSV files. It sorts, modifies, and transforms the supply data. 
+    Finally, the processed data is saved to a CSV file. 
+
+    Parameters
+    ----------
+    save_folder_path : str, optional
+        The path of the folder where the processed data will be saved. By default 'data/processed/'.
+
+    Raises
+    ------
+    FileNotFoundError
+        If the raw data files are not found in their respective paths.
+
     """
-    # Define the folder path for saving the processed data
-    folder_path = "data/processed"
+
+    folder_path = save_folder_path
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
 
@@ -245,7 +257,7 @@ def process_supply_data():
     ail_df = ail_df[["ail", "gas_price", "price", "peak_or_not", "season"]]
     final_df = pd.merge(ail_df, merged_df, left_index=True, right_on="Date (MST)")
     
-    ail_df.to_csv("data/processed/ail_price.csv")
+    ail_df.to_csv( os.path.join(save_folder_path, "ail_price.csv"))
 
     final_df["total_tng"] = (
         final_df["gas_tng"]
@@ -349,35 +361,41 @@ def process_supply_data():
     final_region_df = pd.merge(region_df, final_df, left_index=True, right_index=True)
     final_region_df.index.name = "date"
 
-    final_region_df.to_csv("data/processed/supply_load_price.csv")
+    final_region_df.to_csv( os.path.join(save_folder_path, "supply_load_price.csv"))
 
     print("Supply and load data preprocessing completed.")
 
 
-def merge_data():
+def merge_data(save_folder_path = 'data/processed/'):
 
     """
-    Merges the supply load price data with the intertie data by performing the following steps:
-    1. Reads the supply load price data and intertie data from CSV files.
-    2. Modifies the frequency and sorts the data.
-    3. Merges the two datasets based on the date index.
-    4. Saves the merged data to a CSV file.
+    Merges the supply load price data with the intertie data.
+
+    Parameters
+    ----------
+    save_folder_path : str, optional
+        The folder path where the data will be saved. Default is 'data/processed/'.
+
+    Raises
+    ------
+    OSError
+        If the specified folder path does not exist and cannot be created.
 
     """
     
-    folder_path = "data/processed"
+    folder_path = save_folder_path
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
         
     print("Started the merging of data...")
     supply_load_price = pd.read_csv(
-        "data/processed/supply_load_price.csv", parse_dates=["date"], index_col="date"
+       os.path.join(save_folder_path, "supply_load_price.csv"), parse_dates=["date"], index_col="date"
     )
     supply_load_price = supply_load_price.asfreq("H")
     supply_load_price = supply_load_price.sort_values(by="date")
 
     intertie_df = pd.read_csv(
-        "data/processed/intertie.csv", parse_dates=["date"], index_col="date"
+        os.path.join(save_folder_path, "intertie.csv"), parse_dates=["date"], index_col="date"
     )
     intertie_df = intertie_df.asfreq("H")
     intertie_df = intertie_df.sort_values(by="date")
@@ -385,7 +403,7 @@ def merge_data():
     merged_df = pd.merge(
         supply_load_price, intertie_df, left_index=True, right_index=True
     )
-    merged_df.to_csv("data/processed/preprocessed_features.csv")
+    merged_df.to_csv(os.path.join(save_folder_path, "preprocessed_features.csv"))
 
     print("Completed the merging of data...")
 

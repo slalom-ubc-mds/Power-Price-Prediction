@@ -4,6 +4,7 @@ import os
 import pytest
 from unittest import mock
 import warnings
+import shutil
 import sys
 from datetime import datetime
 
@@ -14,30 +15,36 @@ from preprocess_helper import *
 def test_preprocess_intertie_data():
     """Test preprocess_intertie_data function."""
     
-    preprocess_intertie_data()
-    path = "data/processed/intertie.csv"
-    assert os.path.exists(path)
+    folder_path = "temp_results/"
+    preprocess_intertie_data(folder_path)
+    path = os.path.join(os.getcwd(), "temp_results", "intertie.csv")
+    assert os.path.exists(path) == True
 
     df = pd.read_csv(path)
     assert df.shape[0] > 0
 
 def test_process_supply_data():
     """Test process_supply_data function."""
-    process_supply_data()
-    path = "data/processed/supply_load_price.csv"
-    assert os.path.exists(path)
+    
+    folder_path = "temp_results/"
+    process_supply_data(folder_path)
+    path = os.path.join(os.getcwd(), "temp_results", "supply_load_price.csv")
+    assert os.path.exists(path) == True
 
     df = pd.read_csv(path)
     assert df.shape[0] > 0
 
 def test_merge_data():
     """Test merge_data function."""
-    merge_data()
-    path = "data/processed/preprocessed_features.csv"
-    assert os.path.exists(path)
+    
+    folder_path = "temp_results/"
+    merge_data(folder_path)
+    path = os.path.join(os.getcwd(), "temp_results", "preprocessed_features.csv")
+    assert os.path.exists(path) == True
 
     df = pd.read_csv(path)
     assert df.shape[0] > 0
+    shutil.rmtree(folder_path)
 
 def test_get_data():
     """Test get_data function."""
