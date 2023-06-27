@@ -6,3 +6,4 @@ root: intro
 chapters:
 - file: proposal
 - file: final_report
+- file : glossary
