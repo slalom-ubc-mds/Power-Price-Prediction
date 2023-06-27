@@ -166,7 +166,7 @@ def get_train_test_split(model_train_start_date, predict_until):
     y_test = y_test[:predict_until]
 
     y_hist = pd.read_csv(
-        "https://raw.githubusercontent.com/slalom-ubc-mds/Power-Price-Prediction/main/data/processed/filtered_target_medium.csv",
+        "https://raw.githubusercontent.com/slalom-ubc-mds/Power-Price-Prediction/main/data/processed/complete_data/target.csv",
         parse_dates=["date"],
         index_col="date",
     )
@@ -176,19 +176,19 @@ def get_train_test_split(model_train_start_date, predict_until):
     return X_train, y_train, X_test, y_test, y_hist
 
 
-def generate_plot(rmse_list, ddf):
+def generate_plot(rmse, animation_df):
     """
     Generate an animated plot of energy price forecast.
 
     Parameters:
-    rmse_list (list): A list of root mean square error values.
-    ddf (pandas.DataFrame): A DataFrame containing the data for plotting.
+    rmse : Root mean square error of the predictions.
+    animation_df (pandas.DataFrame): A DataFrame containing the data for plotting.
 
     Returns:
     plotly.graph_objects.Figure: An animated plot of energy price forecast.
 
     """
-    ddf["date"] = ddf["index"]
+    animation_df["date"] = animation_df["index"]
 
     frames = []
 
@@ -200,15 +200,19 @@ def generate_plot(rmse_list, ddf):
         "Predicted Lower",
     ]
 
-    for timestep in ddf["timestep"].unique():
+    for timestep in animation_df["timestep"].unique():
         frame = go.Frame(
             data=[
                 go.Scatter(
-                    x=ddf.loc[ddf["timestep"] == timestep, "periodstep"],
-                    y=ddf.loc[ddf["timestep"] == timestep, label],
+                    x=animation_df.loc[
+                        animation_df["timestep"] == timestep, "periodstep"
+                    ],
+                    y=animation_df.loc[animation_df["timestep"] == timestep, label],
                     mode="markers+lines",
                     name=label,  # Setting the name attribute for each trace
-                    customdata=ddf.loc[ddf["timestep"] == timestep, ["date"]],
+                    customdata=animation_df.loc[
+                        animation_df["timestep"] == timestep, ["date"]
+                    ],
                     hovertemplate="<br>Label=%{fullData.name}<br>Price=%{y}<br>Date=%{customdata[0]}<extra></extra>",
                 )
                 for label in labels
@@ -253,7 +257,7 @@ def generate_plot(rmse_list, ddf):
                     y=0.95,
                     xref="paper",
                     yref="paper",
-                    text=f"Average RMSE of predictions: {round(np.mean(rmse_list), 2)} CAD",
+                    text=f"Average RMSE of predictions: {round(rmse, 2)} CAD",
                     showarrow=False,
                     font=dict(size=20),
                 )
@@ -304,7 +308,9 @@ def check_dates(model_train_start_date, predict_until):
         )
 
 
-def save_results(fig, rolling_prediction_df, error_df, results_path="results/"):
+def save_results(
+    fig, rolling_prediction_df, error_df, animation_df, results_path="results/"
+):
     """
     Saves prediction results and error data to files.
 
@@ -312,6 +318,7 @@ def save_results(fig, rolling_prediction_df, error_df, results_path="results/"):
         fig (plotly.graph_objs._figure.Figure): The plotly figure object containing the predictions plot.
         rolling_prediction_df (pandas.DataFrame): The DataFrame containing rolling predictions.
         error_df (pandas.DataFrame): The DataFrame containing error data.
+        animation_df (pandas.DataFrame): The DataFrame containing data for plotting the predictions animation.
         results_path (str, optional): The path to the results directory. Defaults to "results/".
 
     Returns:
@@ -333,6 +340,12 @@ def save_results(fig, rolling_prediction_df, error_df, results_path="results/"):
     print("Saving rolling predictions complete...")
 
     error_df.to_csv(results_path + "rolling_predictions_rmse.csv", index=False)
+
+    print("Saving error data complete...")
+
+    animation_df.to_csv(results_path + "animation_df.csv")
+
+    print("Saving animation data complete...")
 
 
 def main(args):
@@ -414,7 +427,7 @@ def main(args):
 
     actuals, rmses = ph.generate_step_errors(predictions, y_test, forecast_len)
 
-    ddf = ph.get_upper_lower_plotting_df(
+    animation_df = ph.get_upper_lower_plotting_df(
         fold_actuals=fold_actuals,
         fold_predictions_list=fold_predictions_list,
         fold_predictions_low_list=fold_predictions_low_list,
@@ -422,7 +435,7 @@ def main(args):
         y_hist=y_hist,
     )
 
-    fig = generate_plot(rmse_list, ddf)
+    fig = generate_plot(np.mean(rmse_list), animation_df)
 
     print("Plotting complete...")
 
@@ -438,7 +451,7 @@ def main(args):
     error_df["prediction_end_date"] = predict_until
     error_df["avg_fold_rmse"] = round(np.mean(rmse_list), 2)
 
-    save_results(fig, rolling_prediction_df, error_df)
+    save_results(fig, rolling_prediction_df, error_df, animation_df)
 
     print("Script complete...")
 
