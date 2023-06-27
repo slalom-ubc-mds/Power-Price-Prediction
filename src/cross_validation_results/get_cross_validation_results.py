@@ -12,9 +12,10 @@ def main():
         "cv_arima_results.pkl",
         "cv_elasticnet_results.pkl",
         "cv_xgb_results.pkl",
+        "cv_lgbm_results.pkl",
     ]
 
-    models = ["ARIMA", "Elastic Net", "XGBoost"]
+    models = ["ARIMA", "Elastic Net", "XGBoost", "LightGBM"]
 
     # Load the data from cv_result_files
     rmse_cv_results = []
