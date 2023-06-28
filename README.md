@@ -16,7 +16,7 @@ Dive into the sections below to discover more about our project:
 
 ## Team
 
-Our team comprises Masters of Data Science students at the University of British Columbia, in collaboration with [Slalom Consulting, LLC](https://www.slalom.com/).
+Our team comprises Masters of Data Science students at the University of British Columbia, in collaboration with UBC Capstone Mentor [Quan Nguyen](https://github.com/quan3010) and [Slalom Consulting, LLC](https://www.slalom.com/).
 
 - [Arjun Radhakrishnan](https://github.com/rkrishnan-arjun)
 - [Sneha Sunil](https://github.com/snesunil)
@@ -107,3 +107,7 @@ To configure Tableau for local or Databricks data source, refer to these guides:
 
 - [Local Tableau Configuration](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/Tableau_ReadME.md#connect-tableau-with-local-files)
 - [Databricks Tableau Configuration](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/Tableau_ReadME.md#connect-tableau-with-databricks)
+
+### Dependencies
+
+For the python dependencies and the conda environment creation file, please check [here](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/environment.yml)
