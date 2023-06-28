@@ -7,8 +7,6 @@
 # `make clean` will remove all generated files and folders.
 
 # Default parameter values
-MODEL_TRAIN_START_DATE ?= 2022-12-01
-PREDICT_UNTIL ?= 2023-02-02
 N_ESTIMATORS ?= 1
 DEVICE ?= cpu
 
@@ -34,7 +32,7 @@ results/cv_results.csv: src/cv_test_results/get_cv_test_results.py
 
 # train the model and save the predictions
 results/predictions_plot.html results/rolling_predictions.csv results/rolling_predictions_rmse.csv: data/processed/complete_data/features.csv data/processed/complete_data/target.csv data/processed/train/y_train.csv data/processed/train/X_train.csv data/processed/test/y_test.csv data/processed/test/X_test.csv results/cv_results.csv
-	python src/local_prediction_pipeline/generate_predictions.py --model_train_start_date=$(MODEL_TRAIN_START_DATE) --predict_until=$(PREDICT_UNTIL) --n_estimators=$(N_ESTIMATORS) --device=$(DEVICE)
+	python src/local_prediction_pipeline/generate_predictions.py --n_estimators=$(N_ESTIMATORS) --device=$(DEVICE)
 
 # render the final report 
 notebooks\jupyter_book_reports\_build\html\index.html: results/predictions_plot.html results/rolling_predictions.csv results/rolling_predictions_rmse.csv

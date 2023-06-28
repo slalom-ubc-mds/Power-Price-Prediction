@@ -1,11 +1,9 @@
 """
 This script generates predictions for the power price forecasting model.
 Usage:
-  script.py --model_train_start_date=<date> --predict_until=<date> [--n_estimators=<value>] [--device=<device_name>]
+  script.py [--n_estimators=<value>] [--device=<device_name>]
 
 Options:
-  --model_train_start_date=<date>    Start date of model training (format: YYYY-MM-DD)
-  --predict_until=<date>             Prediction end date (format: YYYY-MM-DD)
   --n_estimators=<value>             Number of estimators (1-1000)
   --device=<device_name>             Device name for training (e.g., cpu, gpu)
 """
@@ -13,8 +11,8 @@ Options:
 from datetime import datetime
 from docopt import docopt
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 from sktime.forecasting.base import ForecastingHorizon
 from sklearn.metrics import mean_squared_error
 import plotly.express as px
@@ -22,6 +20,7 @@ import plotly.graph_objects as go
 import pandas as pd
 import os
 import warnings
+from sktime.forecasting.model_selection import temporal_train_test_split
 
 warnings.filterwarnings("ignore")
 
@@ -102,16 +101,9 @@ def validate_date(date_str):
         raise ValueError("Invalid date format. Please use YYYY-MM-DD.")
 
 
-def get_train_test_split(model_train_start_date, predict_until):
+def get_train_test_split():
     """
     Fetches and prepares the training and testing data for a power price prediction model.
-
-    Parameters:
-    ----------
-    model_train_start_date : str
-        The start date for the training data in the format "YYYY-MM-DD".
-    predict_until : int
-        The number of records to include in the test data.
 
     Returns:
     -------
@@ -126,55 +118,39 @@ def get_train_test_split(model_train_start_date, predict_until):
     y_hist : pandas.DataFrame
         The historical target variable used for reference as a pandas DataFrame.
     """
-    X_train = pd.read_csv(
-        "https://raw.githubusercontent.com/slalom-ubc-mds/Power-Price-Prediction/main/data/processed/train/X_train.csv",
+    X = pd.read_csv(
+        "https://raw.githubusercontent.com/slalom-ubc-mds/Power-Price-Prediction/main/data/processed/complete_data/features.csv",
         parse_dates=["date"],
         index_col="date",
     )
 
-    y_train = pd.read_csv(
-        "https://raw.githubusercontent.com/slalom-ubc-mds/Power-Price-Prediction/main/data/processed/train/y_train.csv",
-        parse_dates=["date"],
-        index_col="date",
-    )
-
-    X_train = X_train.sort_values(by="date")
-    X_train = X_train.asfreq("H")
-    y_train = y_train.sort_values(by="date")
-    y_train = y_train.asfreq("H")
-
-    X_train = X_train[model_train_start_date:]
-    y_train = y_train[model_train_start_date:]
-
-    X_test = pd.read_csv(
-        "https://raw.githubusercontent.com/slalom-ubc-mds/Power-Price-Prediction/main/data/processed/test/X_test.csv",
-        parse_dates=["date"],
-        index_col="date",
-    )
-
-    y_test = pd.read_csv(
-        "https://raw.githubusercontent.com/slalom-ubc-mds/Power-Price-Prediction/main/data/processed/test/y_test.csv",
-        parse_dates=["date"],
-        index_col="date",
-    )
-
-    X_test = X_test.sort_values(by="date")
-    X_test = X_test.asfreq("H")
-    y_test = y_test.sort_values(by="date")
-    y_test = y_test.asfreq("H")
-
-    X_test = X_test[:predict_until]
-    y_test = y_test[:predict_until]
-
-    y_hist = pd.read_csv(
+    y = pd.read_csv(
         "https://raw.githubusercontent.com/slalom-ubc-mds/Power-Price-Prediction/main/data/processed/complete_data/target.csv",
         parse_dates=["date"],
         index_col="date",
     )
 
-    y_hist = y_hist.sort_values(by="date")
-    y_hist = y_hist.asfreq("H")
-    return X_train, y_train, X_test, y_test, y_hist
+    X = X.sort_values(by="date")
+    X = X.asfreq("H")
+    y = y.sort_values(by="date")
+    y = y.asfreq("H")
+
+    # Train test split
+    forecast_len = 12
+
+    # Select test size same as the size where we have actaul predictions from AESO
+    test_size = 24 * 4
+
+    y_train, y_test, X_train, X_test = temporal_train_test_split(
+        y, X, test_size=test_size + forecast_len
+    )
+
+    y_train = y_train.asfreq("H")
+    y_test = y_test.asfreq("H")
+    X_train = X_train.asfreq("H")
+    X_test = X_test.asfreq("H")
+
+    return X_train, y_train, X_test, y_test, y
 
 
 def generate_plot(rmse, animation_df):
@@ -351,22 +327,12 @@ def save_results(
 
 def main(args):
     """Main function to run the script."""
-    model_train_start_date = validate_date(args["--model_train_start_date"])
-    predict_until = validate_date(args["--predict_until"])
     n_estimators = int(args["--n_estimators"])
     device = args["--device"]
 
-    check_dates(model_train_start_date, predict_until)
+    X_train, y_train, X_test, y_test, y_hist = get_train_test_split()
 
-    X_train, y_train, X_test, y_test, y_hist = get_train_test_split(
-        model_train_start_date, predict_until
-    )
-
-    print(
-        "Downloading data from {} to {} complete...".format(
-            model_train_start_date, predict_until
-        )
-    )
+    print("Downloading data complete...")
 
     lgbm_pipeline = ph.initialize_optimized_lgbm_forecaster(
         n_estimators=n_estimators, device=device
@@ -405,7 +371,7 @@ def main(args):
         fh,
         step_length,
         forecast_len,
-        verbose=False,
+        verbose=True,
     )
 
     print("Generating rolling predictions complete...")
@@ -448,8 +414,6 @@ def main(args):
     }
 
     error_df = pd.DataFrame(data)
-    error_df["model_start_date"] = model_train_start_date
-    error_df["prediction_end_date"] = predict_until
     error_df["avg_fold_rmse"] = round(np.mean(rmse_list), 2)
 
     save_results(fig, rolling_prediction_df, error_df, animation_df)

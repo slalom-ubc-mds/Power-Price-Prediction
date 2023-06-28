@@ -7,7 +7,6 @@ import pandas as pd
 import numpy as np
 import os
 import pickle
-import shutil
 
 
 def main():
@@ -54,17 +53,7 @@ def main():
     if not os.path.exists("results"):
         os.makedirs("results")
 
-    rmse_cv_results_df.to_csv("results/cv_results.csv", index=False)    
-
-    shutil.copyfile(
-        r"notebooks/local_testing_pipelines/aeso_test_results.csv",
-        r"results/aeso_test_results.csv",
-    )
-    
-    shutil.copyfile(
-        r"notebooks/benchmark_error/aeso_error.csv",
-        r"results/aeso_error.csv",
-    )
+    rmse_cv_results_df.to_csv("results/cv_results.csv", index=False)
 
     print("Script complete...")
 

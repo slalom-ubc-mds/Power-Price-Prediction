@@ -36,12 +36,7 @@ def test_validate_date():
 
 
 def test_get_train_test_split():
-    model_train_start_date = datetime(2021, 1, 1)
-    predict_until = datetime(2023, 5, 30)
-
-    X_train, y_train, X_test, y_test, y_hist = get_train_test_split(
-        model_train_start_date, predict_until
-    )
+    X_train, y_train, X_test, y_test, y_hist = get_train_test_split()
 
     assert len(X_train) != 0
     assert len(y_train) != 0
