@@ -8,11 +8,11 @@ We have the following folders in our git repository -
 
 - `databricks_assets` -
 
-- `docs` - Contains all the intermediate files generated to host the jupyter notebook for the report
+- `docs` - Contains all the intermediate files generated to host the Jupyter Notebook for the report
 
--  `img` - Contains the GIFs that showcases the instructions to follow for Tableau configuration
+-  `img` - Contains the GIFs that showcase the instructions to follow for Tableau configuration
 
--  `notebooks` - Contains the notebooks related to our modelling pipeline.
+-  `notebooks` - Contains the notebooks related to our modeling pipeline.
 
       - `benchmark_error` - Contains the notebook which can be used to generate the error made by AESO in their 6 step predictions
       - `cross-validation` - Contains the cross validation notebooks for each experimented model
