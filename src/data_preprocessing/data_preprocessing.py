@@ -58,19 +58,24 @@ def save_df_to_csv(df, dir_path, file_name):
     df.to_csv(file_path)
 
 # Preprocess intertie data
-def preprocess_data():
+def preprocess_data(save_folder_path = 'data/processed/'):
 
     """
-    Preprocesses the data by performing the following steps:
-    1. Runs the 'preprocess_intertie_data' function.
-    2. Runs the 'process_supply_data' function.
-    3. Runs the 'merge_data' function.
-    4. Performs feature selection and preprocessing on the preprocessed features dataset.
-    5. Saves the selected features and target data to CSV files.
-    6. Performs train-test split and saves the split data to CSV files.
+    Preprocesses the data.
 
-    Returns:
-        None
+    Parameters
+    ----------
+    save_folder_path : str, optional
+        The folder path where the preprocessed data will be saved. Default is 'data/processed/'.
+
+    Returns
+    -------
+    None
+
+    Raises
+    ------
+    Exception
+        If an error occurs during the preprocessing.
     """
      
     try:
@@ -246,7 +251,7 @@ def preprocess_data():
 
     # export again
     try:
-        folder_path = "data/processed/complete_data"
+        folder_path = os.path.join(save_folder_path, "complete_data")
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
 
@@ -268,17 +273,17 @@ def preprocess_data():
         y_train = y.loc["2021-01-01":"2023-01-31"]
         y_test = y.loc["2023-02-01":]
 
-        folder_paths = ["data/processed/train", "data/processed/test"]
+        folder_paths = [os.path.join(save_folder_path, "train"), os.path.join(save_folder_path, "test")]
 
         for folder_path in folder_paths:
             if not os.path.exists(folder_path):
                 os.makedirs(folder_path)
 
         # Save to csv
-        save_df_to_csv(X_train, "data/processed/train", "X_train.csv")
-        save_df_to_csv(X_test, "data/processed/test", "X_test.csv")
-        save_df_to_csv(y_train, "data/processed/train", "y_train.csv")
-        save_df_to_csv(y_test, "data/processed/test", "y_test.csv")
+        save_df_to_csv(X_train, os.path.join(save_folder_path, "train") , "X_train.csv")
+        save_df_to_csv(X_test, os.path.join(save_folder_path, "test"), "X_test.csv")
+        save_df_to_csv(y_train, os.path.join(save_folder_path, "train"), "y_train.csv")
+        save_df_to_csv(y_test,os.path.join(save_folder_path, "test"), "y_test.csv")
     except Exception as e:
         print(f"Error while doing train-test split and saving: {str(e)}")
         sys.exit(1)

@@ -3,7 +3,7 @@ import numpy as np
 import pytest
 import sys
 
-sys.path.append("src/deployed_scripts/")
+sys.path.append("src/databricks_prediction_pipeline/")
 
 from pipeline_helper import *
 

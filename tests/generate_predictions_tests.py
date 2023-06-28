@@ -5,7 +5,7 @@ import os
 
 import sys
 
-sys.path.append("src/local_testing_scripts/")
+sys.path.append("src/local_prediction_pipeline/")
 
 from generate_predictions import (
     create_folder,

@@ -40,6 +40,33 @@ def test_save_df_to_csv(tmp_path):
     loaded_df = pd.read_csv(dir_path / file_name, index_col=0)
     pd.testing.assert_frame_equal(loaded_df, df)
 
+def test_preprocess_data():
+
+    # Run the preprocess_data function
+    preprocess_data("temp_results/")
+
+    # Check if the processed features and target data files are created
+    features_file_path = os.path.join(os.getcwd(), "temp_results", "complete_data", "features.csv")
+    target_file_path = os.path.join(os.getcwd(),  "temp_results", "complete_data", "target.csv")
+    assert os.path.exists(features_file_path)
+    assert os.path.exists(target_file_path)
+
+    # Check if the train-test split data files are created
+    train_features_file_path = os.path.join(os.getcwd(), "temp_results", "train", "X_train.csv")
+    train_target_file_path = os.path.join(os.getcwd(), "temp_results", "train", "y_train.csv")
+    test_features_file_path = os.path.join(os.getcwd(), "temp_results", "test", "X_test.csv")
+    test_target_file_path = os.path.join(os.getcwd(), "temp_results", "test", "y_test.csv")
+
+    assert os.path.exists(train_features_file_path) == True
+    assert os.path.exists(train_target_file_path) == True
+    assert os.path.exists(test_features_file_path) == True
+    assert os.path.exists(test_target_file_path) == True
+
+    import shutil
+
+    folder_path = "temp_results/"
+    shutil.rmtree(folder_path)
+
 
 if __name__ == "__main__":
     pytest.main([__file__])
