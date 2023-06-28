@@ -58,7 +58,7 @@ def main():
     )
     
     shutil.copyfile(
-        r"notebooks/benchmark_error/aeso_Error.csv",
+        r"notebooks/benchmark_error/aeso_error.csv",
         r"results/aeso_error.csv",
     )
 
