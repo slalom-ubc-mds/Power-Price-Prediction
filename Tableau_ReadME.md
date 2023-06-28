@@ -6,16 +6,13 @@
 4. Run the notebook and the initial set of predictions will be stored at `databricks_assets/` folder
 5. Navigate to Tableau workbook
 6. Click **Data Source** at the bottom left.
-7. Choose one of the data sources (`predicted_price`, `shap`, `shap_explain`).
-8. Click **Add** next to the connection.
-9. Choose **Text File**.
-10. Select the corresponding CSV file from `databricks_assets/` folder.
+7. You will be asked to choose files.
+8. Select the corresponding CSV file from `databricks_assets/` folder.
  
-    (`shap_explain.csv` under `shap_explain`, `predicted_price.csv` under predicted_price, `shap.csv` under shap_explain)
-13. Drag the file from **Files** to the center.
-14. Repeat the above steps for the other two data sources.
-15. Click **Predicted Dash** at the bottom.
-16. Click **Data** on the top and choose **Refresh All Extracts**. Tableau will be up to date.
+    (`shap_explain.csv` under `shap_explain`, `predicted_price.csv` under predicted_price, `shap.csv` under shap)
+9. Repeat the above steps for the other two data sources.
+10. Click **Predicted Dash** at the bottom.
+11. Click **Data** on the top and choose **Refresh All Extracts**. Tableau will be up to date.
 
 ![Local Files Connection](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/img/local.gif)
 
@@ -34,7 +31,7 @@
 10. Click the search sign in **Table**.
 11. Select the corresponding SQL tables from the **Table**.
 
-    (`shap_explain` under `shap_explain`, `predicted_price` under predicted_price, `shap` under shap_explain)
+    (`shap_explain` under `shap_explain`, `predicted_price` under predicted_price, `shap` under shap)
 13. Drag the Table to the center.
 14. Repeat the above steps for the other two data sources.
 15. Click **Predicted Dash** at the bottom.
