@@ -1,9 +1,9 @@
 ## Connect Tableau with local files:
 
-1. Follow the local set up in root directory [instruction](https://github.com/slalom-ubc-mds/Power-Price-Prediction/tree/main#local-setup)
+1. Follow the local setup in the root directory [instruction](https://github.com/slalom-ubc-mds/Power-Price-Prediction/tree/main#local-setup)
 2. Navigate to `src/databricks_prediction_pipeline/prediction_pipeline.ipynb`
 3. Set `IS_LOCAL = True`
-4. Run the notebook and the initial set of predictions will be stored at `databricks_assets/` folder
+4. Run the notebook and the initial set of predictions will be stored in `databricks_assets/` folder
 5. Load the [workbook](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/dashboard/prediction_dashboard_local.twbx) to Tableau
 6. Click **Data Source** at the bottom left.
 7. You will be asked to choose files.
@@ -14,7 +14,7 @@
 10. Click **Predicted Dash** at the bottom.
 11. Click **Data** on the top and choose **Refresh All Extracts**. Tableau will be up to date.
 
-![Local Files Connection](img/local.gif)
+![Local Files Connection](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/img/local.gif)
 
 
 ## Connect Tableau with Databricks:
