@@ -1,3 +1,7 @@
+"""
+This script is used to get the cross-validation, AESO results, and test results.
+"""
+
 from datetime import datetime
 import pandas as pd
 import numpy as np

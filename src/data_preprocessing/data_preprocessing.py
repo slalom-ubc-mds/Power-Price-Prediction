@@ -1,3 +1,7 @@
+"""
+This script is used to generate the preprocessed data.
+"""
+
 import os
 import re
 import sys
@@ -6,6 +10,7 @@ import pandas as pd
 sys.path.append("notebooks/utils")
 
 from preprocess_helper import *
+
 
 def compute_weekly_profile(row):
     """
@@ -36,8 +41,8 @@ def compute_weekly_profile(row):
     else:
         return 0
 
-def save_df_to_csv(df, dir_path, file_name):
 
+def save_df_to_csv(df, dir_path, file_name):
     """
     Saves a DataFrame to a CSV file.
 
@@ -52,14 +57,14 @@ def save_df_to_csv(df, dir_path, file_name):
 
     # Ensure the directories exist
     os.makedirs(dir_path, exist_ok=True)
-    
+
     # Save dataframe to csv
     file_path = os.path.join(dir_path, file_name)
     df.to_csv(file_path)
 
-# Preprocess intertie data
-def preprocess_data(save_folder_path = 'data/processed/'):
 
+# Preprocess intertie data
+def preprocess_data(save_folder_path="data/processed/"):
     """
     Preprocesses the data.
 
@@ -77,7 +82,7 @@ def preprocess_data(save_folder_path = 'data/processed/'):
     Exception
         If an error occurs during the preprocessing.
     """
-     
+
     try:
         preprocess_intertie_data()
     except Exception as e:
@@ -112,17 +117,23 @@ def preprocess_data(save_folder_path = 'data/processed/'):
     price_old_df = price_old_df.asfreq("H").sort_values(by="date")
 
     # Rename the columns for clarity
-    price_old_df = price_old_df.rename(columns={
-        "calgary": "calgary_load",
-        "central": "central_load",
-        "edmonton": "edmonton_load",
-        "northeast": "northeast_load",
-        "northwest": "northwest_load",
-        "south": "south_load",
-    })
+    price_old_df = price_old_df.rename(
+        columns={
+            "calgary": "calgary_load",
+            "central": "central_load",
+            "edmonton": "edmonton_load",
+            "northeast": "northeast_load",
+            "northwest": "northwest_load",
+            "south": "south_load",
+        }
+    )
 
     # Multiply the specified columns by 100 to make it percentages
-    selected_columns = [col for col in price_old_df.columns if col.endswith(("_reserve_margin", "_supply_mix", "_ratio"))]
+    selected_columns = [
+        col
+        for col in price_old_df.columns
+        if col.endswith(("_reserve_margin", "_supply_mix", "_ratio"))
+    ]
 
     # Add other columns
     selected_columns.extend(["relative_gas_reserve", "load_on_gas_reserve"])
@@ -145,11 +156,12 @@ def preprocess_data(save_folder_path = 'data/processed/'):
     rolling_y = y.rolling(window)
 
     # Calculate rolling statistics
-    X[["rolling_mean", "rolling_std", "rolling_min", "rolling_max", "rolling_median"]] = rolling_y.agg(["mean", "std", "min", "max", "median"])
+    X[
+        ["rolling_mean", "rolling_std", "rolling_min", "rolling_max", "rolling_median"]
+    ] = rolling_y.agg(["mean", "std", "min", "max", "median"])
 
     # Calculate exponential moving average
     X["exp_moving_avg"] = y.ewm(span=window).mean()
-
 
     X.dropna(inplace=True)
     y = y.loc[X.index]
@@ -184,7 +196,7 @@ def preprocess_data(save_folder_path = 'data/processed/'):
         sum_df.columns = ["volume_sum", "system_marginal_price_sum"]
         sum_dfs.append(sum_df)
 
-    # You now have lists of average and sum dataframes. 
+    # You now have lists of average and sum dataframes.
     all_averages = pd.concat(average_dfs)
     all_sums = pd.concat(sum_dfs)
 
@@ -238,10 +250,10 @@ def preprocess_data(save_folder_path = 'data/processed/'):
         "total_reserve_margin",
         "volume_sum",
         "volume_avg",
-        "weekly_profile"
+        "weekly_profile",
     ]
 
-    #Replace prices less than zero as 5 to avoid problems with log
+    # Replace prices less than zero as 5 to avoid problems with log
     y[y < 5] = 5
 
     X.index.name = "date"
@@ -273,22 +285,26 @@ def preprocess_data(save_folder_path = 'data/processed/'):
         y_train = y.loc["2021-01-01":"2023-01-31"]
         y_test = y.loc["2023-02-01":]
 
-        folder_paths = [os.path.join(save_folder_path, "train"), os.path.join(save_folder_path, "test")]
+        folder_paths = [
+            os.path.join(save_folder_path, "train"),
+            os.path.join(save_folder_path, "test"),
+        ]
 
         for folder_path in folder_paths:
             if not os.path.exists(folder_path):
                 os.makedirs(folder_path)
 
         # Save to csv
-        save_df_to_csv(X_train, os.path.join(save_folder_path, "train") , "X_train.csv")
+        save_df_to_csv(X_train, os.path.join(save_folder_path, "train"), "X_train.csv")
         save_df_to_csv(X_test, os.path.join(save_folder_path, "test"), "X_test.csv")
         save_df_to_csv(y_train, os.path.join(save_folder_path, "train"), "y_train.csv")
-        save_df_to_csv(y_test,os.path.join(save_folder_path, "test"), "y_test.csv")
+        save_df_to_csv(y_test, os.path.join(save_folder_path, "test"), "y_test.csv")
     except Exception as e:
         print(f"Error while doing train-test split and saving: {str(e)}")
         sys.exit(1)
 
     print("Completed the feature selection...")
+
 
 if __name__ == "__main__":
     preprocess_data()

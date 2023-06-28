@@ -3,6 +3,8 @@
 # copyright: sktime developers, BSD-3-Clause License (see LICENSE file)
 """sktime window forecaster base class."""
 
+# Adapted code to utilize the warm start functionality of lightgbm
+
 __author__ = ["mloning", "big-o", "fkiraly"]
 __all__ = ["_BaseWindowForecaster"]
 

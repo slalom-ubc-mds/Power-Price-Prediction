@@ -1,3 +1,11 @@
+"""
+preprocessing.py
+
+This module provides functions for preprocessing intertie data, supply data, and merging them together.
+It also includes functions for retrieving data and creating lagged columns.
+
+"""
+
 import pandas as pd
 import numpy as np
 import requests
@@ -7,8 +15,7 @@ import warnings
 import os
 
 
-def preprocess_intertie_data(save_folder_path = 'data/processed/'):
-
+def preprocess_intertie_data(save_folder_path="data/processed/"):
     """
     Preprocesses the intertie data.
 
@@ -95,13 +102,12 @@ def preprocess_intertie_data(save_folder_path = 'data/processed/'):
         print(f"An error occurred: {e}")
 
 
-def process_supply_data(save_folder_path = 'data/processed/'):
-
+def process_supply_data(save_folder_path="data/processed/"):
     """
     Processes supply data, performing transformations, calculations, and saves the result to CSV.
 
-    This function reads the load and price data from CSV files. It sorts, modifies, and transforms the supply data. 
-    Finally, the processed data is saved to a CSV file. 
+    This function reads the load and price data from CSV files. It sorts, modifies, and transforms the supply data.
+    Finally, the processed data is saved to a CSV file.
 
     Parameters
     ----------
@@ -180,14 +186,14 @@ def process_supply_data(save_folder_path = 'data/processed/'):
     )
 
     columns = [
-    "gas_tng",
-    "dual_fuel_tng",
-    "coal_tng",
-    "wind_tng",
-    "solar_tng",
-    "hydro_tng",
-    "storage_tng",
-    "other_tng",
+        "gas_tng",
+        "dual_fuel_tng",
+        "coal_tng",
+        "wind_tng",
+        "solar_tng",
+        "hydro_tng",
+        "storage_tng",
+        "other_tng",
     ]
 
     tng_df = wide_tng_df[columns].copy()
@@ -208,7 +214,7 @@ def process_supply_data(save_folder_path = 'data/processed/'):
     }
 
     wide_sys_avail_df = wide_sys_avail_df.rename(columns=column_mapping)
-    
+
     # Total system available energy using gas
     wide_sys_avail_df["gas_avail"] = (
         wide_sys_avail_df["cogeneration_avail"]
@@ -218,14 +224,14 @@ def process_supply_data(save_folder_path = 'data/processed/'):
     )
 
     columns = [
-    "gas_avail",
-    "dual_fuel_avail",
-    "coal_avail",
-    "wind_avail",
-    "solar_avail",
-    "hydro_avail",
-    "storage_avail",
-    "other_avail",
+        "gas_avail",
+        "dual_fuel_avail",
+        "coal_avail",
+        "wind_avail",
+        "solar_avail",
+        "hydro_avail",
+        "storage_avail",
+        "other_avail",
     ]
 
     avail_df = wide_sys_avail_df[columns].copy()
@@ -256,8 +262,8 @@ def process_supply_data(save_folder_path = 'data/processed/'):
     ail_df = ail_df.rename(columns=column_mapping)
     ail_df = ail_df[["ail", "gas_price", "price", "peak_or_not", "season"]]
     final_df = pd.merge(ail_df, merged_df, left_index=True, right_on="Date (MST)")
-    
-    ail_df.to_csv( os.path.join(save_folder_path, "ail_price.csv"))
+
+    ail_df.to_csv(os.path.join(save_folder_path, "ail_price.csv"))
 
     final_df["total_tng"] = (
         final_df["gas_tng"]
@@ -344,8 +350,7 @@ def process_supply_data(save_folder_path = 'data/processed/'):
     final_df = final_df.sort_index()
     final_df = final_df.asfreq("H")
 
-
-    # Read the region wise loads data 
+    # Read the region wise loads data
 
     region_df = pd.read_csv(
         "data/raw/region_load.csv", parse_dates=["Date (MST)"], index_col="Date (MST)"
@@ -361,13 +366,12 @@ def process_supply_data(save_folder_path = 'data/processed/'):
     final_region_df = pd.merge(region_df, final_df, left_index=True, right_index=True)
     final_region_df.index.name = "date"
 
-    final_region_df.to_csv( os.path.join(save_folder_path, "supply_load_price.csv"))
+    final_region_df.to_csv(os.path.join(save_folder_path, "supply_load_price.csv"))
 
     print("Supply and load data preprocessing completed.")
 
 
-def merge_data(save_folder_path = 'data/processed/'):
-
+def merge_data(save_folder_path="data/processed/"):
     """
     Merges the supply load price data with the intertie data.
 
@@ -382,20 +386,24 @@ def merge_data(save_folder_path = 'data/processed/'):
         If the specified folder path does not exist and cannot be created.
 
     """
-    
+
     folder_path = save_folder_path
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
-        
+
     print("Started the merging of data...")
     supply_load_price = pd.read_csv(
-       os.path.join(save_folder_path, "supply_load_price.csv"), parse_dates=["date"], index_col="date"
+        os.path.join(save_folder_path, "supply_load_price.csv"),
+        parse_dates=["date"],
+        index_col="date",
     )
     supply_load_price = supply_load_price.asfreq("H")
     supply_load_price = supply_load_price.sort_values(by="date")
 
     intertie_df = pd.read_csv(
-        os.path.join(save_folder_path, "intertie.csv"), parse_dates=["date"], index_col="date"
+        os.path.join(save_folder_path, "intertie.csv"),
+        parse_dates=["date"],
+        index_col="date",
     )
     intertie_df = intertie_df.asfreq("H")
     intertie_df = intertie_df.sort_values(by="date")
@@ -450,7 +458,6 @@ def get_data(start_date, end_date):
 
 
 def create_lagged_columns(X, lag_range=24):
-
     """
     Creates lagged columns for the input DataFrame X.
 
@@ -461,7 +468,7 @@ def create_lagged_columns(X, lag_range=24):
     Returns:
         list: A list of lagged column names.
     """
-    
+
     lagged_names = []
     for col in X:
         for lag in range(lag_range, 0, -1):

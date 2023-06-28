@@ -1,3 +1,10 @@
+"""
+preprocessing.py
+
+This module provides functions for generating rolling predictions, step predictions, and plotting animations for the predictions.
+
+"""
+
 from sklearn.metrics import mean_squared_error
 import pandas as pd
 import numpy as np

@@ -34,6 +34,8 @@ State:
     fitted state inspection - check_is_fitted()
 """
 
+# Adapted code to utilize the warm start functionality of lightgbm
+
 __author__ = ["mloning", "big-o", "fkiraly", "sveameyer13", "miraep8"]
 
 __all__ = ["BaseForecaster"]
