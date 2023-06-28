@@ -50,11 +50,16 @@ def main():
     if not os.path.exists("results"):
         os.makedirs("results")
 
-    rmse_cv_results_df.to_csv("results/cv_results.csv", index=False)
+    rmse_cv_results_df.to_csv("results/cv_results.csv", index=False)    
 
     shutil.copyfile(
         r"notebooks/local_testing_pipelines/aeso_test_results.csv",
         r"results/aeso_test_results.csv",
+    )
+    
+    shutil.copyfile(
+        r"notebooks/benchmark_error/aeso_Error.csv",
+        r"results/aeso_error.csv",
     )
 
     print("Script complete...")
