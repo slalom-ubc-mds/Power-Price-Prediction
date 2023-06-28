@@ -69,7 +69,13 @@ conda env create --file environment.yml
 conda activate power_price_pred
 ```
 
-4. Run the prediction pipeline using Makefile. Note that the entire pipeline takes approximately 3+ hours to run on an Intel i7 12700H, 14 Cores, 16 GB RAM. The original model is trained using data from January 1st, 2021 to January 31st, 2023. Therefore, please keep the following in mind when setting up your training parameters:
+4. Reset and clean the existing analysis results from directories by running the below command from the project root directory:
+
+```bash
+make clean
+```
+
+5. Run the prediction pipeline using Makefile. Note that the entire pipeline takes approximately 3+ hours to run on an Intel i7 12700H, 14 Cores, 16 GB RAM. The original model is trained using data from January 1st, 2021 to January 31st, 2023. Therefore, please keep the following in mind when setting up your training parameters:
 
     - `MODEL_TRAIN_START_DATE`: This parameter should be set to a date later than January 1st, 2021 and earlier than December 31st, 2022. This is to ensure the model has at least one month's worth of training data.
 
