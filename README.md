@@ -55,9 +55,11 @@ VS Code: Visit the [VS Code website](https://code.visualstudio.com/) and downloa
 
 ## Usage
 
-- To run the prediction pipeline locally, follow the below steps:
+### Local Usage
 
-clone the forked repo to your local machine in VS Code Command Line by running
+The entire prediction pipeline can be emulated to run locally. To do so, perform the following steps.
+
+Clone the repo to your local machine by running the following command in your terminal:
 
 ```
 git clone https://github.com/slalom-ubc-mds/Power-Price-Prediction.git
@@ -81,34 +83,33 @@ Activate the conda environment:
 conda activate power_price_pred
 ```
 
-To generate the required training and testing data, run the following command from the root of the project directory:
+To run the entire pipeline from preprocessing the raw data until generating the final Jupyter Book, we utilize the Makefile.
+
+- The original model is trained from Jan 1st, 2021 to Jan 31, 2023. Hence, `model_train_start_date` needs to be greater than January 1st, 2021, and less than December 31st, 2022 to allow at least one month of training data.
+- Predictions will start from Feb 1st, 2023. Hence, `predict_until` should be greater than February 1st, 2023, and less than May 30th, 2023.
+- The number of estimators can be adjusted to improve the model performance or reduce the training time.
+- If the system supports processing on a Graphical Processing Unit (GPU), set `device` to `gpu` to speed up the training process. The default value is `cpu`.
 
 ```
-cd src/data_preprocessing
-```
+make MODEL_TRAIN_START_DATE=2021-01-01 PREDICT_UNTIL=2023-02-28 N_ESTIMATORS=1000 DEVICE=cpu
 
 ```
-python data_preprocessing.py 
-```
 
-To train the model and generate the predictions, run the following command from the root of the project directory:
+> Note: Please note the running time of the entire pipeline is approximately 3+ hours on an Intel i7 12700H, 14 Cores, 16 GB RAM.
 
-```
-cd src/local_prediction_pipeline
-```
+To test the entire flow on a limited dataset and limited number of estimators, you can limit the training data to 1 month and the number of estimators to 1. This will reduce the running time to approximately 5 minutes.
 
 ```
-python generate_predictions.py --model_train_start_date=2021-01-02 --predict_until=2023-02-02 --n_estimators=1000
+make MODEL_TRAIN_START_DATE=2022-12-01 PREDICT_UNTIL=2023-02-05 N_ESTIMATORS=1 DEVICE=cpu
 ```
 
-The original model is trained from Jan 1st, 2021 to Jan 31, 2023. Hence, `model_train_start_date` needs to be greater than January 1st, 2021, and less than December 31st, 2022 to allow at least one month of training data. Predictions will start from Feb 1st, 2023. Hence, `predict_until` should be greater than January 31st, 2023, and less than May 30th, 2023.
-The number of estimators can be adjusted to improve the model performance or reduce the training time.
+### Deployment to Databricks
 
-[Connect tableau to local files](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/Tableau_ReadME.md#connect-tableau-with-local-files)
+1. To deploy the actual prediction pipeline to databricks, publish the scripts located at [src/databricks_prediction_pipeline](https://github.com/slalom-ubc-mds/Power-Price-Prediction/tree/main/src/databricks_prediction_pipeline) on databricks with a cluster installed with [SKTIME](https://www.sktime.net/en/latest/installation.html) and [LightGBM](https://lightgbm.readthedocs.io/en/latest/Installation-Guide.html)
+2. Run [src/databricks_prediction_pipeline/prediction_pipeline.ipynb](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/src/databricks_prediction_pipeline/prediction_pipeline.ipynb) to  train the model and generate the intial set of predictions.
+3. Schedule [update_predict_pipeline.ipynb](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/src/databricks_prediction_pipeline/update_predict_pipeline.ipynb) as a databricks job with an appropriate schedule (ideally, at 1 hour frequency to emulate real time updates).
 
----
-
-- To run prediction on Databricks, follow the below steps:
+The current system is already configured at the Slalom's Databricks account. To run prediction on Databricks on this account, follow the below steps:
 
 Log in to [Databricks](https://univbritcol-slalom-capstone23.cloud.databricks.com/login.html?o=8254429304025469)
 
@@ -118,16 +119,7 @@ Choose `prediction_pipeline` and click `Run all`. The initial prediction will be
 
 Choose `update_predict_pipeline` and click `Schedule`. The prediction will be updated based on preferable refresh time (hourly).
 
-[Connect tableau to Databricks](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/Tableau_ReadME.md#connect-tableau-with-databricks)
+For details on how to configure Tablaue on a local data source as well as Databricks, follow the below guides:
 
----
-
-- To run unit test locally, run the following command from the root of the project directory:
-  
-```
-cd test
-```
-
-```
-pytest pipeline_helper_test.py
-```
+- [Configure Tableau to test locally](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/Tableau_ReadME.md#connect-tableau-with-local-files)
+- [Configure Tableau to read from Databricks](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/Tableau_ReadME.md#connect-tableau-with-databricks)
