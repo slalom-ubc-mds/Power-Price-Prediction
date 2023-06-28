@@ -75,6 +75,15 @@ conda activate power_price_pred
 make clean
 ```
 
+5. Raw data required to run the pipeline is already downloaded and saved to folder(). If you would like to get the latest data, navigate to [tableau](https://public.tableau.com/app/profile/market.analytics/viz/AnnualStatistics_16161854228350/Introduction) and click on the 7th tab which says Data Download Instructions and follow the guidelines. 
+
+  Data should be downloaded from the following sections - 
+
+    - Price & AIL
+    - System & Regional Load
+    - Generation
+    - Interties
+
 5. Run the prediction pipeline using Makefile. Note that the entire pipeline takes approximately 3+ hours to run on an Intel i7 12700H, 14 Cores, 16 GB RAM. The original model is trained using data from January 1st, 2021 to January 31st, 2023. Therefore, please keep the following in mind when setting up your training parameters:
 
     - `MODEL_TRAIN_START_DATE`: This parameter should be set to a date later than January 1st, 2021 and earlier than December 31st, 2022. This is to ensure the model has at least one month's worth of training data.
@@ -106,8 +115,8 @@ To deploy the prediction pipeline to Databricks, follow the instructions below:
 
 To configure Tableau for local or Databricks data source, refer to these guides:
 
-- [Local Tableau Configuration](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/Tableau_ReadME.md#connect-tableau-with-local-files)
-- [Databricks Tableau Configuration](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/Tableau_ReadME.md#connect-tableau-with-databricks)
+- [Local Tableau Configuration](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/dashboard/Tableau_ReadME.md#connect-tableau-with-local-files)
+- [Databricks Tableau Configuration](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/dashboard/Tableau_ReadME.md#connect-tableau-with-databricks)
 
 Currently, the pipeline is deployed at [Slalom's Databricks Account](https://univbritcol-slalom-capstone23.cloud.databricks.com/login.html?o=8254429304025469) under the folder `Workspace/Shared/Power_Price_Prediction_Pipeline`. The dashboard is published at [Tableau Public](https://public.tableau.com/app/profile/gaoxiang.wang8077/viz/AESOVersion6_0/PredictedDash?publish=yes). Due to licensing restrictions, the dashboard Tableau Public does not update automatically. Once the restrictions are lifted, please refer to the previous section to set up Tableau on Databricks.
 

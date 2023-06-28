@@ -4,7 +4,7 @@
 2. Navigate to `src/databricks_prediction_pipeline/prediction_pipeline.ipynb`
 3. Set `IS_LOCAL = True`
 4. Run the notebook and the initial set of predictions will be stored at `databricks_assets/` folder
-5. Navigate to Tableau workbook
+5. Load the [workbook](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/dashboard/prediction_dashboard_local.twbx) to Tableau
 6. Click **Data Source** at the bottom left.
 7. You will be asked to choose files.
 8. Select the corresponding CSV file from `databricks_assets/` folder.
@@ -20,7 +20,7 @@
 ## Connect Tableau with Databricks:
 
 1. Generate a [Databricks Access Token](https://docs.databricks.com/dev-tools/auth.html#databricks-personal-access-tokens-for-users).
-2. Click **Data Source** at the bottom left.
+2. Load the [workbook](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/dashboard/prediction_dashboard_local.twbx) to Tableau. Click **Data Source** at the bottom left.
 3. Choose one of the data sources (`predicted_price`, `shap`, `shap_explain`).
 4. Click **Add** next to the connection.
 5. Choose **Databricks**.
