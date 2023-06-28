@@ -77,7 +77,7 @@ conda activate power_price_pred
     - If the system supports processing on a Graphical Processing Unit (GPU), set `device` to `gpu` to speed up the training process. The default value is `cpu`.
 
 ```bash
-make MODEL_TRAIN_START_DATE=2022-12-01 PREDICT_UNTIL=2023-02-05 N_ESTIMATORS=1 DEVICE=cpu
+make MODEL_TRAIN_START_DATE=2021-01-01 PREDICT_UNTIL=2023-02-28 N_ESTIMATORS=1000 DEVICE=cpu
 ```
 
    You can limit the training data and number of estimators for a quicker (~5 minutes) test run.
