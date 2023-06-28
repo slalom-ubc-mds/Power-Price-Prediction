@@ -6,7 +6,7 @@ We have the following folders in our git repository -
 
 - `data` - Contains two folders. The first one is the raw folder which contains all the raw data files. Then we have a processed folder that contains all the processed files. The complete features and target data that we have used in our pipeline can be found in the `complete_data` folder and the training and test set can be found in their respective folders `train` and `test`.
 
-- `databricks_assets` -
+- `databricks_assets` - Contains the generated assets by running the databricks pipeline locally by setting the flag is_local = True
 
 - `docs` - Contains all the intermediate files generated to host the Jupyter Notebook for the report
 
