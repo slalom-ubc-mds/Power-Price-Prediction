@@ -99,7 +99,7 @@ make clean
 make all N_ESTIMATORS=1000 DEVICE=cpu
 ```
 
-> You can limit the training data and the number of estimators for a quicker (~5 minutes) test run.
+> You can limit the number of estimators for a quicker (~10 minutes) test run.
 
 ```bash
 make all N_ESTIMATORS=1 DEVICE=cpu
