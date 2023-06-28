@@ -75,7 +75,7 @@ conda activate power_price_pred
 make clean
 ```
 
-5. Raw data required to run the pipeline is already downloaded and saved to folder(). If you would like to get the latest data, navigate to [tableau](https://public.tableau.com/app/profile/market.analytics/viz/AnnualStatistics_16161854228350/Introduction) and click on the 7th tab which says Data Download Instructions and follow the guidelines. 
+5. Raw data required to run the pipeline is already downloaded and saved to [folder](https://github.com/slalom-ubc-mds/Power-Price-Prediction/tree/main/data/raw). If you would like to get the latest data, navigate to [tableau](https://public.tableau.com/app/profile/market.analytics/viz/AnnualStatistics_16161854228350/Introduction) and click on the 7th tab which says Data Download Instructions and follow the guidelines. 
 
 Data should be downloaded from the following sections:
 
