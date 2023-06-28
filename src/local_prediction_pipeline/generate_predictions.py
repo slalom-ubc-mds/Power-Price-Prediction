@@ -371,7 +371,7 @@ def main(args):
         fh,
         step_length,
         forecast_len,
-        verbose=True,
+        verbose=False,
     )
 
     print("Generating rolling predictions complete...")
