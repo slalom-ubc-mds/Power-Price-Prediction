@@ -14,18 +14,18 @@ We have the following folders in our git repository -
 
 -  `notebooks` - Contains the notebooks related to our modeling pipeline.
 
-      - `benchmark_error` - Contains the notebook which can be used to generate the error made by AESO in their 6 step predictions
-      - `cross-validation` - Contains the cross validation notebooks for each experimented model
+      - `benchmark_error` - Contains the notebook which can be used to generate the error made by AESO in their 6-step predictions
+      - `cross-validation` - Contains the cross-validation notebooks for each experimented model
       - `jupyter_book_reports`- Contains the files related to the report
       - `local_testing_pipelines` - Contains the notebook which evaluates our model for the report
-      - `utils`- All the scripts that contains the helper functions for our pipeline are stored here
+      - `utils`- All the scripts that contain the helper functions for our pipeline are stored here
 
 - `results` - All the results files are stored here
 
 - `src` - Contains all the scripts which are part of our pipeline
-    - `cv_test_results` - Script to move the test results from pickle file to results folder
+    - `cv_test_results` - Script to move the cross-validation results from the pickle file to the results folder
     - `data_preprocessing` - Script for data preprocessing and feature engineering
-    - `databricks_prediction_pipeline` - Scripts that are hosted in databricks
-    - `local_prediction_pipeline` - Scripts that generates the predictions locally
+    - `databricks_prediction_pipeline` - Scripts that are hosted in data bricks
+    - `local_prediction_pipeline` - Scripts that generate the predictions locally
 
 - `tests` - Contains all the test scripts 
