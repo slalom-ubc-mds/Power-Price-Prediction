@@ -14,7 +14,7 @@
 10. Click **Predicted Dash** at the bottom.
 11. Click **Data** on the top and choose **Refresh All Extracts**. Tableau will be up to date.
 
-![Local Files Connection]((https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/img/local.gif)
+![Local Files Connection](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/img/local.gif)
 
 
 ## Connect Tableau with Databricks:
