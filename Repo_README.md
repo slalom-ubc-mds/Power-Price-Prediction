@@ -2,7 +2,7 @@
 
 We have the following folders in our git repository -
 
-- `dashboard` - Contains the tableau workbook and the Tableau_ReadME.md which explains the instructions to connect Tableau to local files as well as with Databricks
+- `dashboard` - Contains the Tableau workbook and the Tableau_README.md which explains the instructions to connect Tableau to local files as well as with Databricks
 
 - `data` - Contains two folders. First one is the raw folder which contains all the raw data files. Then we have processed folder which contains all the processed files. The complete features and target data that we have used in our pipeline can be found in `complete_data` folder and the training and test set can be found in theie respective folders `train` and `test`
 
