@@ -1,14 +1,21 @@
 ## Connect Tableau with local files:
 
-1. Click **Data Source** at the bottom left.
-2. Choose one of the data sources (`predicted_price`, `shap`, `shap_explain`).
-3. Click **Add** next to the connection.
-4. Choose **Text File**.
-5. Select the corresponding CSV file from your local computer.
-6. Drag the file from **Files** to the center.
-7. Repeat the above steps for the other two data sources.
-8. Click **Predicted Dash** at the bottom.
-9. Click **Data** on the top and choose **Refresh All Extracts**. Tableau will be up to date.
+1. Follow the local step up [instruction](https://github.com/slalom-ubc-mds/Power-Price-Prediction/tree/main#local-setup)
+2. Navigate to `src/databricks_prediction_pipeline/prediction_pipeline.ipynb`
+3. Set `IS_LOCAL = True`
+4. Run the notebook and the initial set of predictions will be stored at `databricks_assets/` folder
+5. Navigate to Tableau workbook
+6. Click **Data Source** at the bottom left.
+7. Choose one of the data sources (`predicted_price`, `shap`, `shap_explain`).
+8. Click **Add** next to the connection.
+9. Choose **Text File**.
+10. Select the corresponding CSV file from `databricks_assets/` folder.
+ 
+    (`shap_explain.csv` under `shap_explain`, `predicted_price.csv` under predicted_price, `shap.csv` under shap_explain)
+13. Drag the file from **Files** to the center.
+14. Repeat the above steps for the other two data sources.
+15. Click **Predicted Dash** at the bottom.
+16. Click **Data** on the top and choose **Refresh All Extracts**. Tableau will be up to date.
 
 ![Local Files Connection](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/img/local.gif)
 
@@ -24,16 +31,13 @@
 7. Choose **Personal Access Token** as the authentication method and copy the token from Databricks.
 8. Choose `hive_metastore` from the **Catalog**.
 9. Click the search sign and choose `default` from the **Database**.
-10. Click the search sign in **Tables**.
+10. Click the search sign in **Table**.
 11. Select the corresponding SQL tables from the **Table**.
-12. Drag the Table to the center.
-13. Repeat the above steps for the other two data sources.
-14. Click **Predicted Dash** at the bottom.
-15. Click **Data** on the top and choose **Refresh All Extracts**. Tableau will be up to date.
+
+    (`shap_explain` under `shap_explain`, `predicted_price` under predicted_price, `shap` under shap_explain)
+13. Drag the Table to the center.
+14. Repeat the above steps for the other two data sources.
+15. Click **Predicted Dash** at the bottom.
+16. Click **Data** on the top and choose **Refresh All Extracts**. Tableau will be up to date.
 
 ![Databricks Connection](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/img/databricks.gif)
-
-
-
-
- 
