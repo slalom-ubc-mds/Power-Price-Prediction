@@ -123,4 +123,4 @@ Currently, the pipeline is deployed at [Slalom's Databricks Account](https://uni
 
 ### Dependencies
 
-For the python dependencies and the conda environment creation file, please check [here](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/environment.yml)
+For the Python dependencies and the conda environment creation file, please check [here](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/environment.yml)
