@@ -1,6 +1,6 @@
 ## Connect Tableau with local files:
 
-1. Follow the local set up in root directory [instruction](https://github.com/slalom-ubc-mds/Power-Price-Prediction/tree/main#local-setup)
+1. Follow the local setup in the root directory [instruction](https://github.com/slalom-ubc-mds/Power-Price-Prediction/tree/main#local-setup)
 2. Navigate to `src/databricks_prediction_pipeline/prediction_pipeline.ipynb`
 3. Set `IS_LOCAL = True`
 4. Run the notebook and the initial set of predictions will be stored at `databricks_assets/` folder
