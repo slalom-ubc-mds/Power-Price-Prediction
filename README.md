@@ -100,8 +100,9 @@ make MODEL_TRAIN_START_DATE=2022-12-01 PREDICT_UNTIL=2023-02-05 N_ESTIMATORS=1 D
 To deploy the prediction pipeline to Databricks, follow the instructions below:
 
 1. Publish scripts in [src/databricks_prediction_pipeline](https://github.com/slalom-ubc-mds/Power-Price-Prediction/tree/main/src/databricks_prediction_pipeline) on Databricks cluster with [SKTIME](https://www.sktime.net/en/latest/installation.html) and [LightGBM](https://lightgbm.readthedocs.io/en/latest/Installation-Guide.html) installed.
-2. Run [prediction_pipeline.ipynb](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/src/databricks_prediction_pipeline/prediction_pipeline.ipynb) to train the model and generate the initial set of predictions.
-3. Schedule [update_predict_pipeline.ipynb](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/src/databricks_prediction_pipeline/update_predict_pipeline.ipynb) as a Databricks job to update predictions at your preferred frequency.
+2. Remove the comment sign in the first line of [pipeline_helper.py](https://github.com/slalom-ubc-mds/Power-Price-Prediction/tree/main/src/databricks_prediction_pipeline/pipeline_helper.py)
+3. Run [prediction_pipeline.ipynb](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/src/databricks_prediction_pipeline/prediction_pipeline.ipynb) to train the model and generate the initial set of predictions.
+4. Schedule [update_predict_pipeline.ipynb](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/src/databricks_prediction_pipeline/update_predict_pipeline.ipynb) as a Databricks job to update predictions at your preferred frequency.
 
 To configure Tableau for local or Databricks data source, refer to these guides:
 
