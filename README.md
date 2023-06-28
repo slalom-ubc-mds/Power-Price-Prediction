@@ -71,13 +71,13 @@ conda activate power_price_pred
 
 4. Run the prediction pipeline using Makefile. Note that the entire pipeline takes approximately 3+ hours to run on an Intel i7 12700H, 14 Cores, 16 GB RAM. The original model is trained using data from January 1st, 2021 to January 31st, 2023. Therefore, please keep the following in mind when setting up your training parameters:
 
-    - MODEL_TRAIN_START_DATE: This parameter should be set to a date later than January 1st, 2021 and earlier than December 31st, 2022. This is to ensure the model has at least one month's worth of training data.
+    - `MODEL_TRAIN_START_DATE`: This parameter should be set to a date later than January 1st, 2021 and earlier than December 31st, 2022. This is to ensure the model has at least one month's worth of training data.
 
-    - PREDICT_UNTIL: This is the date up to which you want to generate predictions. It should be set to a date later than February 1st, 2023 and earlier than May 30th, 2023.
+    - `PREDICT_UNTIL`: This is the date up to which you want to generate predictions. It should be set to a date later than February 1st, 2023 and earlier than May 30th, 2023.
 
-    - N_ESTIMATORS: This parameter denotes the number of boosting stages the model will go through. You can tweak this number to balance model performance and training time according to your requirements.
+    - `N_ESTIMATORS`: This parameter denotes the number of boosting stages the model will go through. You can tweak this number to balance model performance and training time according to your requirements.
 
-    - DEVICE: Specify the hardware you want to use for training the model. If your system supports GPU processing, set this to 'gpu' for faster training. If not, or if you prefer to use the CPU, the default value is 'cpu'.
+    - `DEVICE`: Specify the hardware you want to use for training the model. If your system supports GPU processing, set this to 'gpu' for faster training. If not, or if you prefer to use the CPU, the default value is 'cpu'.
 
 ```bash
 make MODEL_TRAIN_START_DATE=2021-01-01 PREDICT_UNTIL=2023-02-28 N_ESTIMATORS=1000 DEVICE=cpu
