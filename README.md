@@ -4,7 +4,7 @@
 
 Welcome to our Power Price Prediction project, a comprehensive and explainable solution for predicting energy prices in the Alberta Energy Market. We leverage data science to deliver forecasts, empowering organizations to optimize their energy procurement strategies.
 
-Explore our [Sample Tableau Dashboard](https://public.tableau.com/app/profile/gaoxiang.wang8077/viz/AESOVersion6_0/PredictedDash?publish=yes) for a live demonstration.
+Explore our [Sample Tableau Dashboard](https://public.tableau.com/app/profile/gaoxiang.wang8077/viz/AESOVersion6_0/PredictedDash?publish=yes) for a live demonstration. The report is also available on [GitHub Pages](https://slalom-ubc-mds.github.io/Power-Price-Prediction/).
 
 Dive into the sections below to discover more about our project:
 
@@ -48,8 +48,8 @@ Ensure you have the following tools installed:
 
 ### README files
 
- - [README file for repository structure](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/Repo_README.md)
- - [README file for Tableau configuration](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/dashboard/Tableau_README.md)
+- [README file for repository structure](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/Repo_README.md)
+- [README file for Tableau configuration](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/dashboard/Tableau_README.md)
 
 ### Local Setup
 
@@ -80,7 +80,7 @@ conda activate power_price_pred
 make clean
 ```
 
-5. Raw data required to run the pipeline is already downloaded and saved to [folder](https://github.com/slalom-ubc-mds/Power-Price-Prediction/tree/main/data/raw). If you would like to get the latest data, navigate to [tableau](https://public.tableau.com/app/profile/market.analytics/viz/AnnualStatistics_16161854228350/Introduction) and click on the 7th tab which says Data Download Instructions and follow the guidelines. 
+5. Raw data required to run the pipeline is already downloaded and saved to [folder](https://github.com/slalom-ubc-mds/Power-Price-Prediction/tree/main/data/raw). If you would like to get the latest data, navigate to [tableau](https://public.tableau.com/app/profile/market.analytics/viz/AnnualStatistics_16161854228350/Introduction) and click on the 7th tab which says Data Download Instructions and follow the guidelines.
 
 Data should be downloaded from the following sections:
 
@@ -89,24 +89,20 @@ Data should be downloaded from the following sections:
 - Generation
 - Interties
 
-5. Run the prediction pipeline using Makefile. Note that the entire pipeline takes approximately 5+ hours to run on an Intel i7 12700H, 14 Cores, 16 GB RAM for the entire month of Feb as test set. The original model is trained using data from January 1st, 2021 to January 31st, 2023. Therefore, please keep the following in mind when setting up your training parameters:
-
-    - `MODEL_TRAIN_START_DATE`: This parameter should be set to a date later than January 1st, 2021 and earlier than December 31st, 2022. This is to ensure the model has at least one month's worth of training data.
-
-    - `PREDICT_UNTIL`: This is the date up to which you want to generate predictions. It should be set to a date later than February 1st, 2023 and earlier than May 30th, 2023.
+5. Run the prediction pipeline using Makefile. Note that the entire pipeline takes approximately one hour to run on an Intel i7 12700H, 14 Cores, 16 GB RAM for the test set from 26th May 2023 to 30th May 2023. The original model is trained using data from January 1st, 2021 to January 31st, 2023. Therefore, please keep the following in mind when setting up your training parameters:
 
     - `N_ESTIMATORS`: This parameter denotes the number of boosting stages the model will go through. You can tweak this number to balance model performance and training time according to your requirements.
 
     - `DEVICE`: Specify the hardware you want to use for training the model. If your system supports GPU processing, set this to 'gpu' for faster training. If not, or if you prefer to use the CPU, the default value is 'cpu'.
 
 ```bash
-make MODEL_TRAIN_START_DATE=2021-01-01 PREDICT_UNTIL=2023-02-28 N_ESTIMATORS=1000 DEVICE=cpu
+make all N_ESTIMATORS=1000 DEVICE=cpu
 ```
 
 > You can limit the training data and number of estimators for a quicker (~5 minutes) test run.
 
 ```bash
-make MODEL_TRAIN_START_DATE=2022-12-01 PREDICT_UNTIL=2023-02-05 N_ESTIMATORS=1 DEVICE=cpu
+make all N_ESTIMATORS=1 DEVICE=cpu
 ```
 
 ### Deployment to Databricks
