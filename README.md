@@ -89,7 +89,7 @@ make clean
     - Generation
     - Interties
 
-6. Run the prediction pipeline using Makefile. Once the run is complete, the locally generated report will be available at `notebooks\jupyter_book_reports\_build\html`. Note that the entire pipeline takes approximately one hour to run on an Intel i7 12700H, 14 Cores, 16 GB RAM for the test set from 26th May 2023 to 31th May 2023. The original model is trained using data from January 1st, 2021 to May 25th, 2023. Therefore, please keep the following in mind when setting up your training parameters:
+6. Run the prediction pipeline using Makefile. Once the run is complete, the locally generated report will be available at `notebooks\jupyter_book_reports\_build\html\index.html`. Note that the entire pipeline takes approximately one hour to run on an Intel i7 12700H, 14 Cores, 16 GB RAM for the test set from 26th May 2023 to 31th May 2023. The original model is trained using data from January 1st, 2021 to May 25th, 2023. Therefore, please keep the following in mind when setting up your training parameters:
 
     - `N_ESTIMATORS`: This parameter denotes the number of boosting stages the model will go through. You can tweak this number to balance model performance and training time according to your requirements.
 
