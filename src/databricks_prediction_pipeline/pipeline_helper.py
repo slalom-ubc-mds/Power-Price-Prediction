@@ -372,9 +372,9 @@ def save_to_dbfs_and_disk(
     joblib.dump(lgbm_pipeline_high, os.path.join(folder_path, "lgbm_pipeline_high.pkl"))
 
     # Save data to disk
-    final_feature_df.to_csv(os.path.join(folder_path, "final_feature_df.csv"))
+    final_feature_df.to_csv(os.path.join(folder_path, "shap.csv"))
     explain_feature_importance.to_csv(os.path.join(folder_path, "shap_explain.csv"))
-    predicted_price.to_csv(os.path.join(folder_path, "shap.csv"))
+    predicted_price.to_csv(os.path.join(folder_path, "predicted_price.csv"))
 
 
 def initialize_optimized_lgbm_forecaster(n_estimators=1000, device="gpu"):
