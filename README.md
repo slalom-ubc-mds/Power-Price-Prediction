@@ -16,13 +16,12 @@ Dive into the sections below to discover more about our project:
 
 ## Team
 
-Our team comprises Masters of Data Science students at the University of British Columbia, in collaboration with [Slalom Consulting, LLC](https://www.slalom.com/).
+Our team comprises Masters of Data Science students at the University of British Columbia, in collaboration with UBC Capstone Mentor [Quan Nguyen](https://github.com/quan3010) and [Slalom Consulting, LLC](https://www.slalom.com/).
 
 - [Arjun Radhakrishnan](https://github.com/rkrishnan-arjun)
 - [Sneha Sunil](https://github.com/snesunil)
 - [Gaoxiang Wang](https://github.com/louiewang820)
 - [Mehdi Naji](https://github.com/mehdi-naji)
-- UBC Capstone Mentor: [Quan Nguyen](https://github.com/quan3010)
 
 ## Project Overview
 
