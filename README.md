@@ -4,7 +4,7 @@
 
 Welcome to our Power Price Prediction project, a comprehensive and explainable solution for predicting energy prices in the Alberta Energy Market. We leverage data science to deliver forecasts, empowering organizations to optimize their energy procurement strategies.
 
-Explore our [Sample Tableau Dashboard](https://public.tableau.com/app/profile/gaoxiang.wang8077/viz/AESOVersion6_0/PredictedDash?publish=yes) for a live demonstration.
+Explore our [Sample Tableau Dashboard](https://public.tableau.com/app/profile/gaoxiang.wang8077/viz/AESOVersion6_0/PredictedDash?publish=yes) for a live demonstration. The report is also available on [GitHub Pages](https://slalom-ubc-mds.github.io/Power-Price-Prediction/).
 
 Dive into the sections below to discover more about our project:
 
