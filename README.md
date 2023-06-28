@@ -72,9 +72,7 @@ conda activate power_price_pred
 4. Run the prediction pipeline using Makefile. Note that the entire pipeline takes approximately 3+ hours to run on an Intel i7 12700H, 14 Cores, 16 GB RAM. You can limit the training data and number of estimators for a quicker (~5 minutes) test run.
 
 ```bash
-make MODEL_TRAIN_START_DATE
-
-=2022-12-01 PREDICT_UNTIL=2023-02-05 N_ESTIMATORS=1 DEVICE=cpu
+make MODEL_TRAIN_START_DATE=2022-12-01 PREDICT_UNTIL=2023-02-05 N_ESTIMATORS=1 DEVICE=cpu
 ```
 
 ### Deployment to Databricks
