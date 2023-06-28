@@ -93,7 +93,7 @@ make clean
 
     - `N_ESTIMATORS`: This parameter denotes the number of boosting stages the model will go through. You can tweak this number to balance model performance and training time according to your requirements.
 
-    - `DEVICE`: Specify the hardware you want to use for training the model. If your system supports GPU processing, set this to 'gpu' for faster training. If not, or if you prefer to use the CPU, the default value is 'cpu'.
+    - `DEVICE`: Specify the hardware you want to use for training the model. If your system supports GPU processing, set this to 'gpu' for faster training. If not, or if you prefer to use the CPU, the default value is 'cpu'. To set up GPU, please refer [LightGBM GPU Tutorial](https://lightgbm.readthedocs.io/en/latest/GPU-Tutorial.html)
 
 ```bash
 make all N_ESTIMATORS=1000 DEVICE=cpu
