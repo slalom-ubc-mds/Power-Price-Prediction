@@ -1,4 +1,5 @@
 """
+This script generates predictions for the power price forecasting model.
 Usage:
   script.py --model_train_start_date=<date> --predict_until=<date> [--n_estimators=<value>] [--device=<device_name>]
 

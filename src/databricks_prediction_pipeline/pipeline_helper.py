@@ -1,4 +1,7 @@
-# from databricks.sdk.runtime import *  # this line should be commented out if running locally
+"""
+This script is a helper script for the main prediction pipeline. 
+It contains functions to generate SHAP values, sentences, and Tableau required dataframes.
+"""
 import pandas as pd
 import os
 import copy
@@ -11,6 +14,7 @@ import pandas as pd
 import joblib
 import warnings
 
+# from databricks.sdk.runtime import *  # this line should be commented out if running locally
 from sktime.forecasting.compose import (
     TransformedTargetForecaster,
     ForecastingPipeline,

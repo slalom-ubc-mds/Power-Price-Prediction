@@ -4,6 +4,8 @@
 
 """Composition functionality for reduction approaches to forecasting."""
 
+# Adapted code to utilize the warm start functionality of lightgbm 
+
 __author__ = [
     "mloning",
     "AyushmaanSeth",

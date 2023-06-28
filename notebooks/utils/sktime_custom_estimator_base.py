@@ -55,6 +55,8 @@ State:
     fitted state check      - check_is_fitted (raises error if not is_fitted)
 """
 
+# Adapted code to utilize the warm start functionality of lightgbm
+
 __author__ = ["mloning", "RNKuhns", "fkiraly"]
 __all__ = ["BaseEstimator", "BaseObject"]
 

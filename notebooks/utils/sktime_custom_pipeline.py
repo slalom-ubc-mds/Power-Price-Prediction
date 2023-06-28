@@ -2,6 +2,8 @@
 # copyright: sktime developers, BSD-3-Clause License (see LICENSE file)
 """Implements pipelines for forecasting."""
 
+# Adapted code to utilize the warm start functionality of lightgbm
+
 __author__ = ["mloning", "aiwalter"]
 __all__ = ["TransformedTargetForecaster", "ForecastingPipeline", "ForecastX"]
 
