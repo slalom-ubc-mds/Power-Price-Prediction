@@ -46,6 +46,11 @@ Ensure you have the following tools installed:
 
 ## Usage
 
+### README files
+
+ - [README file for repository structure](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/Repo_README)
+ - [README file for Tableau configuration](https://github.com/slalom-ubc-mds/Power-Price-Prediction/blob/main/dashboard/Tableau_ReadME.md)
+
 ### Local Setup
 
 Follow the instructions below to run the prediction pipeline locally.
